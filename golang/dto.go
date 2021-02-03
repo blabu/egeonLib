@@ -1,4 +1,4 @@
-package shared
+package golang
 
 import "time"
 

@@ -1,4 +1,4 @@
-package shared
+package golang
 
 // KEYs for request cross services
 const (

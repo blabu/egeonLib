@@ -1,4 +1,4 @@
-package shared
+package golang
 
 import (
 	"context"
@@ -10,8 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
-
-	"github.com/blabu/egeonGateway/dto"
 )
 
 // ContextMiddleware - wrap current request context to context with cancel
@@ -71,7 +69,7 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo) {
 }
 
 //FormRequestID - формирует строку с идентификатором запроса
-func FormRequestID(user *dto.User) string {
+func FormRequestID(user *User) string {
 	if user == nil {
 		return ""
 	}
@@ -82,7 +80,7 @@ func FormRequestID(user *dto.User) string {
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах)
 func ParseHeaderMiddleware(c *gin.Context) {
 	userJSON := c.Request.Header.Get(UserHeaderKey)
-	var user dto.User
+	var user User
 	if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
 		log.Err(err).Msg("When try parse user in header " + userJSON)
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": Errors["undefUser"].Error()})
