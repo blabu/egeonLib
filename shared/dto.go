@@ -1,4 +1,4 @@
-package egeonlib
+package shared
 
 import "time"
 

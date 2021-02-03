@@ -1,4 +1,4 @@
-package egeonlib
+package shared
 
 // KEYs for request cross services
 const (
