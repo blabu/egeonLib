@@ -12,7 +12,7 @@ import (
 )
 
 //DoRequest - create request and read answer
-func DoRequest(ctx context.Context, client *retry.Client, reqURL url.URL, clientIP string) ([]byte, error) {
+func DoRequest(ctx context.Context, client *retry.Client, clientIP string, reqURL url.URL, reqBody []byte) ([]byte, error) {
 	reqID, ok := ctx.Value(RequestID).(string)
 	if !ok {
 		return nil, Errors["badReqID"]
