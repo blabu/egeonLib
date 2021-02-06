@@ -13,14 +13,14 @@ import (
 
 //DoRequest - create request and read answer
 func DoRequest(ctx context.Context, client *retry.Client, clientIP string, reqURL url.URL, reqBody []byte) ([]byte, error) {
-	reqID, ok := ctx.Value(RequestID).(string)
-	if !ok {
-		return nil, Errors["badReqID"]
-	}
+	reqID, _ := ctx.Value(RequestID).(string)
 	user, ok := ctx.Value(UserKey).(User)
 	if !ok {
 		log.Error().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg("Undefined user")
 		return nil, Errors["undefUser"]
+	}
+	if len(reqID) == 0 {
+		reqID = FormRequestID(&user)
 	}
 	userJSON, _ := json.Marshal(&user)
 	req, err := retry.NewRequest("GET", reqURL.String(), nil)
