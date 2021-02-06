@@ -12,7 +12,7 @@ import (
 )
 
 //DoRequest - create request and read answer
-func DoRequest(ctx context.Context, client *retry.Client, reqURL url.URL, reqBody []byte) ([]byte, error) {
+func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
 	reqID, _ := ctx.Value(RequestID).(string)
 	user, ok := ctx.Value(UserKey).(User)
 	if !ok {
@@ -23,12 +23,11 @@ func DoRequest(ctx context.Context, client *retry.Client, reqURL url.URL, reqBod
 		reqID = FormRequestID(&user)
 	}
 	userJSON, _ := json.Marshal(&user)
-	req, err := retry.NewRequest("GET", reqURL.String(), nil)
+	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
 		log.Err(err).Str(RequestIDHeaderKey, reqID).Msg("When try create request to get device ids")
 		return nil, err
 	}
-	req.RequestURI = "" //uri should be an empty for client request
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	resp, err := client.Do(req)
