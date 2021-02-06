@@ -12,7 +12,7 @@ import (
 )
 
 //DoRequest - create request and read answer
-func DoRequest(ctx context.Context, client *retry.Client, clientIP string, reqURL url.URL, reqBody []byte) ([]byte, error) {
+func DoRequest(ctx context.Context, client *retry.Client, reqURL url.URL, reqBody []byte) ([]byte, error) {
 	reqID, _ := ctx.Value(RequestID).(string)
 	user, ok := ctx.Value(UserKey).(User)
 	if !ok {
@@ -31,8 +31,6 @@ func DoRequest(ctx context.Context, client *retry.Client, clientIP string, reqUR
 	req.RequestURI = "" //uri should be an empty for client request
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
-	req.Header.Add("X-Real-IP", clientIP)
-	req.Header.Add("X-Forwarded-For", clientIP)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Err(err).Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg("When send request " + req.URL.String())
