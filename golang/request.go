@@ -12,6 +12,8 @@ import (
 )
 
 //DoRequest - create request and read answer
+//method can be GET, POST, PUT, DELETE (http method)
+//reqBody - can be nil
 func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
 	reqID, _ := ctx.Value(RequestID).(string)
 	user, ok := ctx.Value(UserKey).(User)
