@@ -5,7 +5,7 @@ const (
 	RequestIDHeaderKey     = "RequestID"
 	UserHeaderKey          = "User"
 	SignatureKey           = "Sign"
-	EegeonSecretKeyEnviron = "EGEON_SECRET_KEY"
+	EegeonSecretKeyEnviron = "EGEON_SECRET_KEY" // По этому ключу в env операционки лежит секрет, которым подписывают авторизованного пользователя
 )
 
 //TODO package egeonGateway/parseuser are shared as external dependencies at another services

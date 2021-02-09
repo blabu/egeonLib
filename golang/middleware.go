@@ -80,14 +80,30 @@ func FormRequestID(user *User) string {
 	return fmt.Sprintf("%d:%s:%s", time.Now().UnixNano(), user.Email, user.SessionKey)
 }
 
+//CreateSignature - подписывает через secret пользователя userJSON
+func CreateSignature(secret, usrJSON []byte) string {
+	temp := make([]byte, len(usrJSON), len(usrJSON)+len(secret))
+	copy(temp, usrJSON)
+	temp = append(temp, secret...)
+	signatureHash := sha256.Sum256(temp)
+	return base64.StdEncoding.EncodeToString(signatureHash[:])
+}
+
+//CheckSignature - check received signature with origin
+func CheckSignature(signature, userJSON, secret string) bool {
+	temp := []byte(userJSON + secret)
+	signatureHash := sha256.Sum256(temp)
+	origin := base64.StdEncoding.EncodeToString(signatureHash[:])
+	return strings.EqualFold(signature, origin)
+}
+
 //ParseHeaderMiddleware - read standart user header in http request to search them user and requestID parameters and add it to context of request
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах)
 func ParseHeaderMiddleware(c *gin.Context) {
 	userJSON := c.Request.Header.Get(UserHeaderKey)
 	signStr := c.Request.Header.Get(SignatureKey)
 	secret := os.Getenv(EegeonSecretKeyEnviron)
-	signatureHash := sha256.Sum256([]byte(userJSON + secret))
-	if !strings.EqualFold(signStr, base64.StdEncoding.EncodeToString(signatureHash[:])) {
+	if !CheckSignature(signStr, userJSON, secret) {
 		log.Error().Msgf("Signature for user %s is incorrect", userJSON)
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": Errors["undefUser"].Error()})
 		return
