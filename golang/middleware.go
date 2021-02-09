@@ -2,9 +2,13 @@ package golang
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -80,19 +84,27 @@ func FormRequestID(user *User) string {
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах)
 func ParseHeaderMiddleware(c *gin.Context) {
 	userJSON := c.Request.Header.Get(UserHeaderKey)
+	signStr := c.Request.Header.Get(SignatureKey)
+	secret := os.Getenv(EegeonSecretKeyEnviron)
+	signatureHash := sha256.Sum256([]byte(userJSON + secret))
+	if !strings.EqualFold(signStr, base64.StdEncoding.EncodeToString(signatureHash[:])) {
+		log.Error().Msgf("Signature for user %s is incorrect", userJSON)
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": Errors["undefUser"].Error()})
+		return
+	}
 	var user User
 	if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
 		log.Err(err).Msg("When try parse user in header " + userJSON)
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": Errors["undefUser"].Error()})
-	} else {
-		ctx := context.WithValue(c.Request.Context(), UserKey, user)
-		requestID := c.Request.Header.Get(RequestIDHeaderKey)
-		if len(requestID) == 0 {
-			log.Warn().Msg(RequestIDHeaderKey + " is empty in header, but user is it. Try generate request ID")
-			requestID = FormRequestID(&user)
-		}
-		ctx = context.WithValue(ctx, RequestID, requestID)
-		c.Request = c.Request.WithContext(ctx)
-		c.Next()
+		return
 	}
+	ctx := context.WithValue(c.Request.Context(), UserKey, user)
+	requestID := c.Request.Header.Get(RequestIDHeaderKey)
+	if len(requestID) == 0 {
+		log.Warn().Msg(RequestIDHeaderKey + " is empty in header, but user is it. Try generate request ID")
+		requestID = FormRequestID(&user)
+	}
+	ctx = context.WithValue(ctx, RequestID, requestID)
+	c.Request = c.Request.WithContext(ctx)
+	c.Next()
 }

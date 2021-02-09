@@ -2,8 +2,10 @@ package golang
 
 // KEYs for request cross services
 const (
-	RequestIDHeaderKey = "RequestID"
-	UserHeaderKey      = "User"
+	RequestIDHeaderKey     = "RequestID"
+	UserHeaderKey          = "User"
+	SignatureKey           = "Sign"
+	EegeonSecretKeyEnviron = "EGEON_SECRET_KEY"
 )
 
 //TODO package egeonGateway/parseuser are shared as external dependencies at another services
