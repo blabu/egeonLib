@@ -24,12 +24,17 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	if len(reqID) == 0 {
 		reqID = FormRequestID(&user)
 	}
+	sign, ok := ctx.Value(SignKey).(string)
+	if !ok {
+		log.Error().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg("Undefined user signature")
+	}
 	userJSON, _ := json.Marshal(&user)
 	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
 		log.Err(err).Str(RequestIDHeaderKey, reqID).Msg("When try create request to get device ids")
 		return nil, err
 	}
+	req.Header.Add(SignatureHeaderKey, sign)
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	resp, err := client.Do(req)
