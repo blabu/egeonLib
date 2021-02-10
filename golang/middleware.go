@@ -101,7 +101,7 @@ func CheckSignature(signature, userJSON, secret string) bool {
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах)
 func ParseHeaderMiddleware(c *gin.Context) {
 	userJSON := c.Request.Header.Get(UserHeaderKey)
-	signStr := c.Request.Header.Get(SignatureKey)
+	signStr := c.Request.Header.Get(SignatureHeaderKey)
 	secret := os.Getenv(EegeonSecretKeyEnviron)
 	if !CheckSignature(signStr, userJSON, secret) {
 		log.Error().Msgf("Signature for user %s is incorrect", userJSON)
@@ -121,6 +121,7 @@ func ParseHeaderMiddleware(c *gin.Context) {
 		requestID = FormRequestID(&user)
 	}
 	ctx = context.WithValue(ctx, RequestID, requestID)
+	ctx = context.WithValue(ctx, SignKey, signStr)
 	c.Request = c.Request.WithContext(ctx)
 	c.Next()
 }
