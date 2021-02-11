@@ -110,6 +110,7 @@ type Role struct {
 	Name         string    `json:"name"`
 	URL          string    `json:"url"`
 	Method       string    `json:"method"`
+	Description  string    `json:"description"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifDate"`
 	Status       Status    `json:"status"`
