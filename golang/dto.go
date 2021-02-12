@@ -113,6 +113,7 @@ type Role struct {
 	Description  string    `json:"description"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifDate"`
+ UserAddID    uint32    `json:"userAddId"`
 	Status       Status    `json:"status"`
 }
 
