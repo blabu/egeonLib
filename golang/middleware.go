@@ -20,9 +20,7 @@ import (
 // Не зависит от сервиса и будет переиспользован во всех сервисах приложения
 func ContextMiddleware(c *gin.Context) {
 	ctx, cncl := context.WithCancel(c.Request.Context())
-	defer func() {
-		cncl()
-	}()
+	defer cncl()
 	c.Request = c.Request.WithContext(ctx)
 	c.Next()
 }
