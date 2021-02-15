@@ -113,7 +113,7 @@ type Role struct {
 	Description  string    `json:"description"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifDate"`
- UserAddID    uint32    `json:"userAddId"`
+	UserAddID    uint32    `json:"userAddId"`
 	Status       Status    `json:"status"`
 }
 
@@ -169,14 +169,14 @@ type UserProfile struct {
 	ModifiedDate   time.Time `json:"modifDate"`
 }
 
-// APIKey - структура определяет ключ доступа к API сервера
+// APIToken - структура определяет ключ доступа к API сервера
 // Для системы ты будешь пользователем с ограниченным набором ролей
 // Позволяет передать часть прав пользователя третьим лицам
 // Строго на определенное время
-type APIKey struct {
+type APIToken struct {
 	ID          uint64    `json:"id"`
 	OwnerID     uint32    `json:"ownerId"`
-	Key         string    `json:"key"`
+	Token       string    `json:"key"`
 	Description string    `json:"description"`
 	Roles       []Role    `json:"roles"`
 	AddedDate   time.Time `json:"addedDate"`
