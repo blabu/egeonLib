@@ -4,11 +4,12 @@ import "time"
 
 //ServerInfo - статическая информация о сервисе. Зависит от сборки системы
 type ServerInfo struct {
-	Name       string            `json:"name"`
-	Version    string            `json:"version"`
-	About      string            `json:"about"`
-	Maintainer string            `json:"maintainer"`
-	Routes     map[string]string `json:"routes"`
+	Name       string                 `json:"name"`
+	Version    string                 `json:"version"`
+	About      string                 `json:"about"`
+	Maintainer string                 `json:"maintainer"`
+	Routes     map[string]string      `json:"routes"`
+	BaseTypes  map[string]interface{} `json:"types"`
 }
 
 //ServerStatus - полная инфомация о сервисе в системе Егеон
