@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 
 	retry "github.com/hashicorp/go-retryablehttp"
@@ -15,6 +17,21 @@ import (
 //method can be GET, POST, PUT, DELETE (http method)
 //reqBody - can be nil
 func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
+	client.ErrorHandler = func(resp *http.Response, err error, numTries int) (*http.Response, error) {
+		if err != nil {
+			var egeonErr struct {
+				Code        uint32 `json:"Code"`
+				Description string `json:"Description"`
+			}
+			defer resp.Body.Close()
+			if data, err := ioutil.ReadAll(resp.Body); err == nil {
+				if err := json.Unmarshal(data, &egeonErr); err == nil {
+					return resp, fmt.Errorf("Try is %d and error is %s and egeonError is {Code: %d Description: %s}", numTries, err.Error(), egeonErr.Code, egeonErr.Description)
+				}
+			}
+		}
+		return resp, err
+	}
 	reqID, _ := ctx.Value(RequestID).(string)
 	user, ok := ctx.Value(UserKey).(User)
 	if !ok {
