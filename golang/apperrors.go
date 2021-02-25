@@ -1,9 +1,26 @@
 package golang
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
+
+// EgeonError - implement error and json interfaces for errors in system. TODO optimize it later
+type EgeonError struct {
+	Code        uint32 `json:"Code"`
+	Description string `json:"Description"`
+}
+
+func (e EgeonError) Error() string {
+	return fmt.Sprintf("{\"Code\":%d, \"Description\": \"%s\"}", e.Code, e.Description)
+}
+
+func (e EgeonError) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("{\"Code\":%d, \"Description\": \"%s\"}", e.Code, e.Description)), nil
+}
 
 const (
-	Inserted uint16 = iota
+	Inserted uint32 = iota
 	Shared
 	HistoryChanged
 	Accepted
