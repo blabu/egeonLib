@@ -13,42 +13,66 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// EgeonError - implement error and json interfaces for errors in system. TODO optimize it later
+type EgeonError struct {
+	Code        uint32 `json:"Code"`
+	Description string `json:"Description"`
+}
+
+func (e EgeonError) Error() string {
+	return fmt.Sprintf("{\"Code\":%d, \"Description\": \"%s\"}", e.Code, e.Description)
+}
+
+func (e EgeonError) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("{\"Code\":%d, \"Description\": \"%s\"}", e.Code, e.Description)), nil
+}
+
+func (e EgeonError) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &e)
+}
+
 //DoRequest - create request and read answer
 //method can be GET, POST, PUT, DELETE (http method)
 //reqBody - can be nil
 func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
-	client.ErrorHandler = func(resp *http.Response, err error, numTries int) (*http.Response, error) {
-		if err != nil {
-			var egeonErr struct {
-				Code        uint32 `json:"Code"`
-				Description string `json:"Description"`
-			}
-			defer resp.Body.Close()
-			if data, err := ioutil.ReadAll(resp.Body); err == nil {
-				if err := json.Unmarshal(data, &egeonErr); err == nil {
-					return resp, fmt.Errorf("Try is %d and error is %s and egeonError is {Code: %d Description: %s}", numTries, err.Error(), egeonErr.Code, egeonErr.Description)
-				}
-			}
-		}
-		return resp, err
-	}
 	reqID, _ := ctx.Value(RequestID).(string)
 	user, ok := ctx.Value(UserKey).(User)
 	if !ok {
 		log.Error().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg("Undefined user")
 		return nil, Errors["undefUser"]
 	}
+	client.ErrorHandler = func(resp *http.Response, err error, numTries int) (*http.Response, error) {
+		if err != nil {
+			return resp, err
+		}
+		if numTries < client.RetryMax {
+			return resp, nil //retry again
+		}
+		if resp.StatusCode > 399 {
+			var egeonErr EgeonError
+			defer resp.Body.Close()
+			if data, err := ioutil.ReadAll(resp.Body); err == nil {
+				if err := json.Unmarshal(data, &egeonErr); err == nil {
+					return resp, egeonErr
+				} else {
+					return resp, errors.New(string(data))
+				}
+			}
+		}
+		return resp, err
+	}
+
 	if len(reqID) == 0 {
 		reqID = FormRequestID(&user)
 	}
 	sign, ok := ctx.Value(SignKey).(string)
 	if !ok {
-		log.Error().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg("Undefined user signature")
+		log.Warn().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg("Undefined user signature. But we continue")
 	}
 	userJSON, _ := json.Marshal(&user)
 	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
-		log.Err(err).Str(RequestIDHeaderKey, reqID).Msg("When try create request to get device ids")
+		log.Err(err).Str(RequestIDHeaderKey, reqID).Msg("When try create request. Can not continue")
 		return nil, err
 	}
 	req.Header.Add(SignatureHeaderKey, sign)
@@ -62,7 +86,7 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
 	if resp.StatusCode >= 300 {
-		log.Error().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg(string(data))
+		log.Info().Str(RequestIDHeaderKey, reqID).Str(UserHeaderKey, user.Email).Msg(string(data))
 		return nil, errors.New(string(data))
 	}
 	return data, err
