@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog/log"
 )
 
 // ContextMiddleware - wrap current request context to context with cancel
@@ -102,20 +101,17 @@ func ParseHeaderMiddleware(c *gin.Context) {
 	signStr := c.Request.Header.Get(SignatureHeaderKey)
 	secret := os.Getenv(EegeonSecretKeyEnviron)
 	if !CheckSignature(signStr, userJSON, secret) {
-		log.Error().Msgf("Signature for user %s is incorrect", userJSON)
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": Errors["undefUser"].Error()})
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": "Signature for user is incorrect"})
 		return
 	}
 	var user User
 	if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
-		log.Err(err).Msg("When try parse user in header " + userJSON)
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": Errors["undefUser"].Error()})
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Code": NotAuthError, "Description": "Error when try parse user in header " + err.Error()})
 		return
 	}
 	ctx := context.WithValue(c.Request.Context(), UserKey, user)
 	requestID := c.Request.Header.Get(RequestIDHeaderKey)
 	if len(requestID) == 0 {
-		log.Warn().Msg(RequestIDHeaderKey + " is empty in header, but user is it. Try generate request ID")
 		requestID = FormRequestID(&user)
 	}
 	ctx = context.WithValue(ctx, RequestID, requestID)

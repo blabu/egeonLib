@@ -37,6 +37,7 @@ const (
 	Wait
 	MethodNotImplemented
 	BadDeleteAttempt
+	DoNotBeHere
 )
 
 type errType error
@@ -55,7 +56,7 @@ func init() {
 	Errors["undefUser"] = GetErr("Невідомий користува. Ця операція вимагає авторизації користувача")
 	Errors["undefDev"] = GetErr("Модем не знайдено")
 	Errors["badCMD"] = GetErr("Команда до пристрою не коректна, або не підримується пристроєм")
-	Errors["badType"] = GetErr("Вхідні данні мають не вірний тип")
+	Errors["badType"] = GetErr("Вхідні данні мають не вірний тип. Або покзчик в нікуди. Зверніться до адміністратора")
 	Errors["permission"] = GetErr("У Вас немає прав на виконання даної операції")
 	Errors["notFound"] = GetErr("Упс. Я не розумію що Ви намагаєтесь зробити. Цей ресурс не доступний")
 	Errors["notImplement"] = GetErr("Цей функціонал не реалізовано")
