@@ -38,6 +38,8 @@ const (
 	MethodNotImplemented
 	BadDeleteAttempt
 	DoNotBeHere
+	Permission
+	ValidateError
 )
 
 type errType error
