@@ -134,6 +134,9 @@ type SessionKey string
 type UsersGroup struct {
 	UserID       uint32    `json:"userId"`
 	Group        Group     `json:"group"`
+	IsUpdate     bool      `json:"isUpdate"`
+	IsCreate     bool      `json:"isCreate"`
+	IsDelete     bool      `json:"IsDelete"`
 	UserAddID    uint32    `json:"userAddId"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifiedDate"`
