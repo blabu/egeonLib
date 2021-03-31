@@ -62,7 +62,7 @@ func init() {
 	Errors["permission"] = GetErr("У Вас немає прав на виконання даної операції")
 	Errors["notFound"] = GetErr("Упс. Я не розумію що Ви намагаєтесь зробити. Цей ресурс не доступний")
 	Errors["notImplement"] = GetErr("Цей функціонал не реалізовано")
-	Errors["notAllowed"] = GetErr("Цей метод або дія не лопустимі. До ресурсу доступ обмежений")
+	Errors["notAllowed"] = GetErr("Цей метод або дія не допустимі. До ресурсу доступ обмежений, або у Вас нема необхідних прав")
 	Errors["incorrectInput"] = GetErr("Не коректні вхідні данні")
 	Errors["notFindRecord"] = GetErr("Прийшов пустий список записів. Таких записів не знайдено")
 	Errors["deleteWithotID"] = GetErr("Can not delete value without ID")
