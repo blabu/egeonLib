@@ -12,6 +12,22 @@ type ServerInfo struct {
 	BaseTypes  map[string]interface{} `json:"types"`
 }
 
+// DBStats contains database statistics.
+type DBStats struct {
+	MaxOpenConnections int `json:"maxOpenCon"` // Maximum number of open connections to the database.
+
+	// Pool Status
+	OpenConnections int `json:"establishCon"` // The number of established connections both in use and idle.
+	InUse           int `json:"inUseCon"`     // The number of connections currently in use.
+	Idle            int `json:"idleCon"`      // The number of idle connections.
+
+	// Counters
+	WaitCount         int64         `json:"waitCon"`           // The total number of connections waited for.
+	WaitDuration      time.Duration `json:"waitDuration"`      // The total time blocked waiting for a new connection.
+	MaxIdleClosed     int64         `json:"maxIdleClosed"`     // The total number of connections closed due to SetMaxIdleConns.
+	MaxLifetimeClosed int64         `json:"maxLifetimeClosed"` // The total number of connections closed due to SetConnMaxLifetime.
+}
+
 //ServerStatus - полная инфомация о сервисе в системе Егеон
 type ServerStatus struct {
 	Info          ServerInfo    `json:"info"`
