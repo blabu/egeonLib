@@ -94,13 +94,34 @@ func CheckSignature(signature, userJSON, secret string) bool {
 	return strings.EqualFold(signature, origin)
 }
 
+func ParseHeader(r *http.Request) (context.Context, error) {
+	userJSON := r.Header.Get(UserHeaderKey)
+	signStr := r.Header.Get(SignatureHeaderKey)
+	secret := os.Getenv(EegeonSecretKeyEnviron)
+	if !CheckSignature(signStr, userJSON, secret) {
+		return r.Context(), EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"}
+	}
+	var user User
+	if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
+		return r.Context(), EgeonError{Code: NotAuthError, Description: "Error when try parse user in header " + err.Error()}
+	}
+	ctx := context.WithValue(r.Context(), UserKey, user)
+	requestID := r.Header.Get(RequestIDHeaderKey)
+	if len(requestID) == 0 {
+		requestID = FormRequestID(&user)
+	}
+	ctx = context.WithValue(ctx, RequestID, requestID)
+	ctx = context.WithValue(ctx, SignKey, signStr)
+	return ctx, nil
+}
+
 //ParseHeaderMiddleware - read standart user header in http request to search them user and requestID parameters and add it to context of request
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах)
 func ParseHeaderMiddleware(c *gin.Context) {
 	ParseHttpHeaderMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		c.Request = r
 		c.Next()
-	}))
+	})).ServeHTTP(c.Writer, c.Request)
 	// userJSON := c.Request.Header.Get(UserHeaderKey)
 	// signStr := c.Request.Header.Get(SignatureHeaderKey)
 	// secret := os.Getenv(EegeonSecretKeyEnviron)
@@ -127,32 +148,43 @@ func ParseHeaderMiddleware(c *gin.Context) {
 //ParseHttpHeaderMiddleware - парсит заголовки запроса в поисках пользователя, проверяет подпись пользователя и requestID.
 func ParseHttpHeaderMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		userJSON := r.Header.Get(UserHeaderKey)
-		signStr := r.Header.Get(SignatureHeaderKey)
-		secret := os.Getenv(EegeonSecretKeyEnviron)
-		if !CheckSignature(signStr, userJSON, secret) {
-			data, _ := json.Marshal(EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"})
+		ctx, err := ParseHeader(r)
+		if err != nil {
+			data, _ := json.Marshal(err)
 			w.Header().Add("Content-Type", "application/json")
 			w.WriteHeader(http.StatusForbidden)
 			w.Write(data)
 			return
 		}
-		var user User
-		if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
-			data, _ := json.Marshal(EgeonError{Code: NotAuthError, Description: "Error when try parse user in header " + err.Error()})
-			w.Header().Add("Content-Type", "application/json")
-			w.WriteHeader(http.StatusForbidden)
-			w.Write(data)
-			return
-		}
-		ctx := context.WithValue(r.Context(), UserKey, user)
-		requestID := r.Header.Get(RequestIDHeaderKey)
-		if len(requestID) == 0 {
-			requestID = FormRequestID(&user)
-		}
-		ctx = context.WithValue(ctx, RequestID, requestID)
-		ctx = context.WithValue(ctx, SignKey, signStr)
 		r = r.WithContext(ctx)
 		handler.ServeHTTP(w, r)
+
+		// userJSON := r.Header.Get(UserHeaderKey)
+		// signStr := r.Header.Get(SignatureHeaderKey)
+		// secret := os.Getenv(EegeonSecretKeyEnviron)
+		// if !CheckSignature(signStr, userJSON, secret) {
+		// 	data, _ := json.Marshal(EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"})
+		// 	w.Header().Add("Content-Type", "application/json")
+		// 	w.WriteHeader(http.StatusForbidden)
+		// 	w.Write(data)
+		// 	return
+		// }
+		// var user User
+		// if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
+		// 	data, _ := json.Marshal(EgeonError{Code: NotAuthError, Description: "Error when try parse user in header " + err.Error()})
+		// 	w.Header().Add("Content-Type", "application/json")
+		// 	w.WriteHeader(http.StatusForbidden)
+		// 	w.Write(data)
+		// 	return
+		// }
+		// ctx := context.WithValue(r.Context(), UserKey, user)
+		// requestID := r.Header.Get(RequestIDHeaderKey)
+		// if len(requestID) == 0 {
+		// 	requestID = FormRequestID(&user)
+		// }
+		// ctx = context.WithValue(ctx, RequestID, requestID)
+		// ctx = context.WithValue(ctx, SignKey, signStr)
+		// r = r.WithContext(ctx)
+		// handler.ServeHTTP(w, r)
 	})
 }
