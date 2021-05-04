@@ -220,6 +220,8 @@ type UserLog struct {
 	URL          string        `json:"url"`
 	Method       string        `json:"method"`
 	IsAborted    bool          `json:"isAborted"`
+	RequestID    string        `json:"requestId"`
+	UserAgent    string        `json:"browser"`
 	ResponceTime time.Duration `json:"responceTime"`
 	AddeDate     time.Time     `json:"addedDate"`
 }
