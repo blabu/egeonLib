@@ -205,7 +205,7 @@ type UserProfile struct {
 type APIToken struct {
 	ID          uint64    `json:"id"`
 	OwnerID     uint32    `json:"ownerId"`
-	Token       string    `json:"key"`
+	Token       string    `json:"token"`
 	Description string    `json:"description"`
 	Roles       []Role    `json:"roles"`
 	AddedDate   time.Time `json:"addedDate"`
