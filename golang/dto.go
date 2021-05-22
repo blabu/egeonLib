@@ -25,6 +25,7 @@ type DBStats struct {
 	WaitCount         int64         `json:"waitCon"`           // The total number of connections waited for.
 	WaitDuration      time.Duration `json:"waitDuration"`      // The total time blocked waiting for a new connection.
 	MaxIdleClosed     int64         `json:"maxIdleClosed"`     // The total number of connections closed due to SetMaxIdleConns.
+	MaxIdleTimeClosed int64         `json:"maxIdleTimeClosed"` // The total number of connections closed due to SetConnMaxIdleTime.
 	MaxLifetimeClosed int64         `json:"maxLifetimeClosed"` // The total number of connections closed due to SetConnMaxLifetime.
 }
 
