@@ -74,7 +74,7 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	}
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
-	if resp.StatusCode >= 300 {
+	if resp.StatusCode >= http.StatusMultipleChoices {
 		return nil, errors.New(string(data))
 	}
 	return data, err
