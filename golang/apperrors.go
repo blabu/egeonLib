@@ -12,7 +12,7 @@ type EgeonError struct {
 }
 
 func (e EgeonError) Error() string {
-	return fmt.Sprintf("{\"Code\":%d, \"Description\": \"%s\"}", e.Code, e.Description)
+	return fmt.Sprintf("Error Code %d, Description: %s", e.Code, e.Description)
 }
 
 func (e EgeonError) MarshalJSON() ([]byte, error) {
