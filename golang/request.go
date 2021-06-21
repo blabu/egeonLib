@@ -36,6 +36,7 @@ func appendDefaultErrorHandler(client *retry.Client) {
 
 //DoRequest - create request and read answer
 //method can be GET, POST, PUT, DELETE (http method)
+// user in context is required
 //reqBody - can be nil
 func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
 	errorWriter, ok := client.Logger.(retry.Logger)
