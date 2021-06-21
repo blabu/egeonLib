@@ -94,6 +94,7 @@ func CheckSignature(signature, userJSON, secret string) bool {
 	return strings.EqualFold(signature, origin)
 }
 
+//ParseHeader - формирует контекст запроса исходя из заголовков HTTP запроса
 func ParseHeader(r *http.Request) (context.Context, error) {
 	userJSON := r.Header.Get(UserHeaderKey)
 	signStr := r.Header.Get(SignatureHeaderKey)
@@ -116,37 +117,20 @@ func ParseHeader(r *http.Request) (context.Context, error) {
 }
 
 //ParseHeaderMiddleware - read standart user header in http request to search them user and requestID parameters and add it to context of request
-// Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах)
+// Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах) если используется gin
 func ParseHeaderMiddleware(c *gin.Context) {
-	ParseHttpHeaderMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		c.Request = r
+	ctx, err := ParseHeader(c.Request)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusForbidden, err)
+	} else {
+		c.Request = c.Request.WithContext(ctx)
 		c.Next()
-	})).ServeHTTP(c.Writer, c.Request)
-	// userJSON := c.Request.Header.Get(UserHeaderKey)
-	// signStr := c.Request.Header.Get(SignatureHeaderKey)
-	// secret := os.Getenv(EegeonSecretKeyEnviron)
-	// if !CheckSignature(signStr, userJSON, secret) {
-	// 	c.AbortWithStatusJSON(http.StatusForbidden, EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"})
-	// 	return
-	// }
-	// var user User
-	// if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
-	// 	c.AbortWithStatusJSON(http.StatusForbidden, EgeonError{Code: NotAuthError, Description: "Error when try parse user in header " + err.Error()})
-	// 	return
-	// }
-	// ctx := context.WithValue(c.Request.Context(), UserKey, user)
-	// requestID := c.Request.Header.Get(RequestIDHeaderKey)
-	// if len(requestID) == 0 {
-	// 	requestID = FormRequestID(&user)
-	// }
-	// ctx = context.WithValue(ctx, RequestID, requestID)
-	// ctx = context.WithValue(ctx, SignKey, signStr)
-	// c.Request = c.Request.WithContext(ctx)
-	// c.Next()
+	}
 }
 
-//ParseHttpHeaderMiddleware - парсит заголовки запроса в поисках пользователя, проверяет подпись пользователя и requestID.
-func ParseHttpHeaderMiddleware(handler http.Handler) http.Handler {
+//ParseHTTPHeaderMiddleware - парсит заголовки запроса в поисках пользователя, проверяет подпись пользователя и requestID.
+// Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах) если используется стандартный http или gorrila.mux
+func ParseHTTPHeaderMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, err := ParseHeader(r)
 		if err != nil {
@@ -158,33 +142,5 @@ func ParseHttpHeaderMiddleware(handler http.Handler) http.Handler {
 		}
 		r = r.WithContext(ctx)
 		handler.ServeHTTP(w, r)
-
-		// userJSON := r.Header.Get(UserHeaderKey)
-		// signStr := r.Header.Get(SignatureHeaderKey)
-		// secret := os.Getenv(EegeonSecretKeyEnviron)
-		// if !CheckSignature(signStr, userJSON, secret) {
-		// 	data, _ := json.Marshal(EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"})
-		// 	w.Header().Add("Content-Type", "application/json")
-		// 	w.WriteHeader(http.StatusForbidden)
-		// 	w.Write(data)
-		// 	return
-		// }
-		// var user User
-		// if err := json.Unmarshal([]byte(userJSON), &user); err != nil {
-		// 	data, _ := json.Marshal(EgeonError{Code: NotAuthError, Description: "Error when try parse user in header " + err.Error()})
-		// 	w.Header().Add("Content-Type", "application/json")
-		// 	w.WriteHeader(http.StatusForbidden)
-		// 	w.Write(data)
-		// 	return
-		// }
-		// ctx := context.WithValue(r.Context(), UserKey, user)
-		// requestID := r.Header.Get(RequestIDHeaderKey)
-		// if len(requestID) == 0 {
-		// 	requestID = FormRequestID(&user)
-		// }
-		// ctx = context.WithValue(ctx, RequestID, requestID)
-		// ctx = context.WithValue(ctx, SignKey, signStr)
-		// r = r.WithContext(ctx)
-		// handler.ServeHTTP(w, r)
 	})
 }

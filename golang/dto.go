@@ -206,7 +206,7 @@ type UserProfile struct {
 type APIToken struct {
 	ID          uint64    `json:"id"`
 	OwnerID     uint32    `json:"ownerId"`
-	Token       string    `json:"key"`
+	Token       string    `json:"token"`
 	Description string    `json:"description"`
 	Roles       []Role    `json:"roles"`
 	AddedDate   time.Time `json:"addedDate"`
@@ -221,6 +221,8 @@ type UserLog struct {
 	URL          string        `json:"url"`
 	Method       string        `json:"method"`
 	IsAborted    bool          `json:"isAborted"`
+	RequestID    string        `json:"requestId"`
+	UserAgent    string        `json:"browser"`
 	ResponceTime time.Duration `json:"responceTime"`
 	AddeDate     time.Time     `json:"addedDate"`
 }
