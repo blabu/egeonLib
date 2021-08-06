@@ -153,7 +153,7 @@ type UsersGroup struct {
 	Group        Group     `json:"group"`
 	IsUpdate     bool      `json:"isUpdate"`
 	IsCreate     bool      `json:"isCreate"`
-	IsDelete     bool      `json:"IsDelete"`
+	IsDelete     bool      `json:"isDelete"`
 	UserAddID    uint32    `json:"userAddId"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifiedDate"`
