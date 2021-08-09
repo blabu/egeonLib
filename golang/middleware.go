@@ -56,7 +56,7 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo) {
 
 	router.GET(url, func(c *gin.Context) {
 		var tempStats = ServerStatus{StartDate: stats.StartDate, Info: stats.Info}
-		tempStats.UpTime = time.Now().Sub(tempStats.StartDate)
+		tempStats.UpTime = time.Now().Sub(tempStats.StartDate) / time.Second
 		tempStats.UpTimeStr = tempStats.UpTime.String()
 		tempStats.SuccesReqCnt = atomic.LoadUint64(&stats.SuccesReqCnt)
 		tempStats.FaileReqCnt = atomic.LoadUint64(&stats.FaileReqCnt)
