@@ -45,7 +45,7 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang(in *jlexer.Lexer, out *U
 			out.IsUpdate = bool(in.Bool())
 		case "isCreate":
 			out.IsCreate = bool(in.Bool())
-		case "IsDelete":
+		case "isDelete":
 			out.IsDelete = bool(in.Bool())
 		case "userAddId":
 			out.UserAddID = uint32(in.Uint32())
@@ -92,7 +92,7 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang(out *jwriter.Writer, in 
 		out.Bool(bool(in.IsCreate))
 	}
 	{
-		const prefix string = ",\"IsDelete\":"
+		const prefix string = ",\"isDelete\":"
 		out.RawString(prefix)
 		out.Bool(bool(in.IsDelete))
 	}
