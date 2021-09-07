@@ -7,3 +7,10 @@ type LoggerWrapper func(string, ...interface{})
 func (log LoggerWrapper) Printf(str string, args ...interface{}) {
 	log(str, args...)
 }
+
+type LoggerWriterWraper func(string)
+
+func (log LoggerWriterWraper) Write(buf []byte) (int, error) {
+	log(string(buf))
+	return len(buf), nil
+}
