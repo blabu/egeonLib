@@ -2,6 +2,7 @@ package golang
 
 // KEYs for request cross services
 const (
+	AllowedRole            = "AllowedUserRole"
 	RequestIDHeaderKey     = "RequestID"
 	UserHeaderKey          = "User"
 	SignatureHeaderKey     = "Sign"
@@ -12,9 +13,13 @@ const (
 type requestIDType string
 type contextKey string
 type signatureKey string
+type allowedRoleType string
 
 // UserKey - ключ, по которому в контексте будет сохранен пользователь
 var UserKey contextKey
+
+// AllowedRoleKey - ключ по которому в контексте будет сохранена роль по которой пользователю разрешен ответ по запросу
+var AllowedRoleKey allowedRoleType
 
 //RequestID - ключ, по которому в контексте будем искать id запроса
 var RequestID requestIDType
