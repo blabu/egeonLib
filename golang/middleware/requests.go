@@ -7,18 +7,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/blabu/egeonLib/golang"
 	"github.com/gin-gonic/gin"
 )
-
-type LogWriterWrapper func(string)
-
-func (l LogWriterWrapper) WriteString(data string) (int, error) {
-	l(data)
-	return len(data), nil
-}
 
 type writerWrap struct {
 	gin.ResponseWriter
@@ -38,6 +32,7 @@ func hash(url string) string {
 	return base64.StdEncoding.EncodeToString(reqURI[:])
 }
 
+//BuildRequestMiddleware - create middleware that cached requests by user requestPerUser - is a template key for Sprintf with to parameters %s and %s
 func BuildRequestMiddleware(cache Model, log io.StringWriter, requestPerUser string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Method != "GET" {
@@ -52,7 +47,7 @@ func BuildRequestMiddleware(cache Model, log io.StringWriter, requestPerUser str
 		}
 		if user, ok := c.Request.Context().Value(golang.UserKey).(golang.User); ok {
 			start := time.Now()
-			key := fmt.Sprintf(requestPerUser, user.ID, hash(c.Request.RequestURI))
+			key := fmt.Sprintf(requestPerUser, strconv.FormatUint(uint64(user.ID), 10), hash(c.Request.RequestURI))
 			if resp, err := cache.Get(c.Request.Context(), key); err == nil {
 				for k, v := range resp.Header {
 					for i := range v {
