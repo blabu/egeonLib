@@ -14,3 +14,8 @@ func (log LoggerWriterWraper) Write(buf []byte) (int, error) {
 	log(string(buf))
 	return len(buf), nil
 }
+
+func (log LoggerWriterWraper) WriteString(buf string) (int, error) {
+	log(buf)
+	return len(buf), nil
+}
