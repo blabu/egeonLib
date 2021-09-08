@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -39,38 +38,27 @@ func appendDefaultErrorHandler(client *retry.Client) {
 // user in context is required
 //reqBody - can be nil
 func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
-	errorWriter, ok := client.Logger.(retry.Logger)
-	if !ok {
-		errorWriter = LoggerWrapper(func(format string, args ...interface{}) {
-			fmt.Printf(format, args...)
-		})
-	}
-	reqID, _ := ctx.Value(RequestID).(string)
-	user, ok := ctx.Value(UserKey).(User)
-	if !ok {
-		errorWriter.Printf("User undefined\n")
-		return nil, Errors["undefUser"]
-	}
 	if client.ErrorHandler == nil {
 		appendDefaultErrorHandler(client)
 	}
-	if len(reqID) == 0 {
-		reqID = FormRequestID(&user)
-	}
-	sign, ok := ctx.Value(SignKey).(string)
-	if !ok {
-		errorWriter.Printf("Undefined user signature. But we continue\n")
-	}
-	allowedRole, _ := ctx.Value(AllowedRoleKey).(string)
-	userJSON, _ := json.Marshal(&user)
 	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
 		return nil, err
 	}
+
+	user, _ := ctx.Value(UserKey).(User)
+	reqID, _ := ctx.Value(RequestID).(string)
+	if len(reqID) == 0 {
+		reqID = FormRequestID(&user)
+	}
+	sign, _ := ctx.Value(SignKey).(string)
+	allowedRole, _ := ctx.Value(AllowedRoleKey).(string)
+	userJSON, _ := json.Marshal(&user)
 	req.Header.Add(SignatureHeaderKey, sign)
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	req.Header.Add(AllowedRoleHeaderKey, allowedRole)
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

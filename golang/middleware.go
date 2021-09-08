@@ -95,6 +95,7 @@ func CheckSignature(signature, userJSON, secret string) bool {
 }
 
 //ParseHeader - формирует контекст запроса исходя из заголовков HTTP запроса
+//формирование заголовка выполняется функцией DoRequest
 func ParseHeader(r *http.Request) (context.Context, error) {
 	userJSON := r.Header.Get(UserHeaderKey)
 	signStr := r.Header.Get(SignatureHeaderKey)
