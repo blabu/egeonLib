@@ -2,7 +2,7 @@ package golang
 
 // KEYs for request cross services
 const (
-	AllowedRole            = "AllowedUserRole"
+	AllowedRoleHeaderKey   = "AllowedUserRole"
 	RequestIDHeaderKey     = "RequestID"
 	UserHeaderKey          = "User"
 	SignatureHeaderKey     = "Sign"

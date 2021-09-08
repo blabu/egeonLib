@@ -99,7 +99,7 @@ func ParseHeader(r *http.Request) (context.Context, error) {
 	userJSON := r.Header.Get(UserHeaderKey)
 	signStr := r.Header.Get(SignatureHeaderKey)
 	secret := os.Getenv(EegeonSecretKeyEnviron)
-	allowedRole := r.Header.Get(AllowedRole)
+	allowedRole := r.Header.Get(AllowedRoleHeaderKey)
 	if !CheckSignature(signStr, userJSON, secret) {
 		return r.Context(), EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"}
 	}

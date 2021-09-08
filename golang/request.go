@@ -61,6 +61,7 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	if !ok {
 		errorWriter.Printf("Undefined user signature. But we continue\n")
 	}
+	allowedRole, _ := ctx.Value(AllowedRoleKey).(string)
 	userJSON, _ := json.Marshal(&user)
 	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
@@ -69,6 +70,7 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	req.Header.Add(SignatureHeaderKey, sign)
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
+	req.Header.Add(AllowedRoleHeaderKey, allowedRole)
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
