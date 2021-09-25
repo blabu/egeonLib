@@ -787,6 +787,28 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang5(in *jlexer.Lexer, out *
 		switch key {
 		case "info":
 			(out.Info).UnmarshalEasyJSON(in)
+		case "addition":
+			if in.IsNull() {
+				in.Skip()
+			} else {
+				in.Delim('{')
+				out.Addition = make(map[string]interface{})
+				for !in.IsDelim('}') {
+					key := string(in.String())
+					in.WantColon()
+					var v7 interface{}
+					if m, ok := v7.(easyjson.Unmarshaler); ok {
+						m.UnmarshalEasyJSON(in)
+					} else if m, ok := v7.(json.Unmarshaler); ok {
+						_ = m.UnmarshalJSON(in.Raw())
+					} else {
+						v7 = in.Interface()
+					}
+					(out.Addition)[key] = v7
+					in.WantComma()
+				}
+				in.Delim('}')
+			}
 		case "startDate":
 			if data := in.Raw(); in.Ok() {
 				in.AddError((out.StartDate).UnmarshalJSON(data))
@@ -827,6 +849,33 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang5(out *jwriter.Writer, in
 		const prefix string = ",\"info\":"
 		out.RawString(prefix[1:])
 		(in.Info).MarshalEasyJSON(out)
+	}
+	{
+		const prefix string = ",\"addition\":"
+		out.RawString(prefix)
+		if in.Addition == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
+			out.RawString(`null`)
+		} else {
+			out.RawByte('{')
+			v8First := true
+			for v8Name, v8Value := range in.Addition {
+				if v8First {
+					v8First = false
+				} else {
+					out.RawByte(',')
+				}
+				out.String(string(v8Name))
+				out.RawByte(':')
+				if m, ok := v8Value.(easyjson.Marshaler); ok {
+					m.MarshalEasyJSON(out)
+				} else if m, ok := v8Value.(json.Marshaler); ok {
+					out.Raw(m.MarshalJSON())
+				} else {
+					out.Raw(json.Marshal(v8Value))
+				}
+			}
+			out.RawByte('}')
+		}
 	}
 	{
 		const prefix string = ",\"startDate\":"
@@ -940,9 +989,9 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang6(in *jlexer.Lexer, out *
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v7 string
-					v7 = string(in.String())
-					(out.Routes)[key] = v7
+					var v9 string
+					v9 = string(in.String())
+					(out.Routes)[key] = v9
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -956,15 +1005,15 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang6(in *jlexer.Lexer, out *
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v8 interface{}
-					if m, ok := v8.(easyjson.Unmarshaler); ok {
+					var v10 interface{}
+					if m, ok := v10.(easyjson.Unmarshaler); ok {
 						m.UnmarshalEasyJSON(in)
-					} else if m, ok := v8.(json.Unmarshaler); ok {
+					} else if m, ok := v10.(json.Unmarshaler); ok {
 						_ = m.UnmarshalJSON(in.Raw())
 					} else {
-						v8 = in.Interface()
+						v10 = in.Interface()
 					}
-					(out.BaseTypes)[key] = v8
+					(out.BaseTypes)[key] = v10
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -1010,16 +1059,16 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang6(out *jwriter.Writer, in
 			out.RawString(`null`)
 		} else {
 			out.RawByte('{')
-			v9First := true
-			for v9Name, v9Value := range in.Routes {
-				if v9First {
-					v9First = false
+			v11First := true
+			for v11Name, v11Value := range in.Routes {
+				if v11First {
+					v11First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v9Name))
+				out.String(string(v11Name))
 				out.RawByte(':')
-				out.String(string(v9Value))
+				out.String(string(v11Value))
 			}
 			out.RawByte('}')
 		}
@@ -1031,21 +1080,21 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang6(out *jwriter.Writer, in
 			out.RawString(`null`)
 		} else {
 			out.RawByte('{')
-			v10First := true
-			for v10Name, v10Value := range in.BaseTypes {
-				if v10First {
-					v10First = false
+			v12First := true
+			for v12Name, v12Value := range in.BaseTypes {
+				if v12First {
+					v12First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v10Name))
+				out.String(string(v12Name))
 				out.RawByte(':')
-				if m, ok := v10Value.(easyjson.Marshaler); ok {
+				if m, ok := v12Value.(easyjson.Marshaler); ok {
 					m.MarshalEasyJSON(out)
-				} else if m, ok := v10Value.(json.Marshaler); ok {
+				} else if m, ok := v12Value.(json.Marshaler); ok {
 					out.Raw(m.MarshalJSON())
 				} else {
-					out.Raw(json.Marshal(v10Value))
+					out.Raw(json.Marshal(v12Value))
 				}
 			}
 			out.RawByte('}')
@@ -1114,9 +1163,9 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang7(in *jlexer.Lexer, out *
 					out.Roles = (out.Roles)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v11 Role
-					(v11).UnmarshalEasyJSON(in)
-					out.Roles = append(out.Roles, v11)
+					var v13 Role
+					(v13).UnmarshalEasyJSON(in)
+					out.Roles = append(out.Roles, v13)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -1147,11 +1196,11 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang7(out *jwriter.Writer, in
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v12, v13 := range in.Roles {
-				if v12 > 0 {
+			for v14, v15 := range in.Roles {
+				if v14 > 0 {
 					out.RawByte(',')
 				}
-				(v13).MarshalEasyJSON(out)
+				(v15).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -2054,9 +2103,9 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang14(in *jlexer.Lexer, out 
 					out.Roles = (out.Roles)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v14 Role
-					(v14).UnmarshalEasyJSON(in)
-					out.Roles = append(out.Roles, v14)
+					var v16 Role
+					(v16).UnmarshalEasyJSON(in)
+					out.Roles = append(out.Roles, v16)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -2110,11 +2159,11 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang14(out *jwriter.Writer, i
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v15, v16 := range in.Roles {
-				if v15 > 0 {
+			for v17, v18 := range in.Roles {
+				if v17 > 0 {
 					out.RawByte(',')
 				}
-				(v16).MarshalEasyJSON(out)
+				(v18).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
