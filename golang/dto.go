@@ -31,17 +31,18 @@ type DBStats struct {
 
 //ServerStatus - полная инфомация о сервисе в системе Егеон
 type ServerStatus struct {
-	Info          ServerInfo    `json:"info"`
-	StartDate     time.Time     `json:"startDate"`
-	UpTime        time.Duration `json:"upTime"`
-	UpTimeStr     string        `json:"upTimeStr"`
-	SuccesReqCnt  uint64        `json:"succesReqCnt"`
-	FaileReqCnt   uint64        `json:"faileReqCnt"`
-	FaileGetCnt   uint64        `json:"faileGetCnt"`
-	FailePostCnt  uint64        `json:"failePostCnt"`
-	FailePutCnt   uint64        `json:"failePutCnt"`
-	FaileDelCnt   uint64        `json:"faileDelCnt"`
-	MiddleReqTime int64         `json:"middleReqTime"`
+	Info          ServerInfo             `json:"info"`
+	Addition      map[string]interface{} `json:"addition"`
+	StartDate     time.Time              `json:"startDate"`
+	UpTime        time.Duration          `json:"upTime"`
+	UpTimeStr     string                 `json:"upTimeStr"`
+	SuccesReqCnt  uint64                 `json:"succesReqCnt"`
+	FaileReqCnt   uint64                 `json:"faileReqCnt"`
+	FaileGetCnt   uint64                 `json:"faileGetCnt"`
+	FailePostCnt  uint64                 `json:"failePostCnt"`
+	FailePutCnt   uint64                 `json:"failePutCnt"`
+	FaileDelCnt   uint64                 `json:"faileDelCnt"`
+	MiddleReqTime int64                  `json:"middleReqTime"`
 }
 
 /*
