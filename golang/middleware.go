@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"runtime"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -55,7 +56,17 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo) {
 	})
 
 	router.GET(url, func(c *gin.Context) {
+		var mem runtime.MemStats
+		runtime.ReadMemStats(&mem)
 		var tempStats = ServerStatus{StartDate: stats.StartDate, Info: stats.Info}
+		tempStats.Addition = map[string]interface{}{
+			"routine":      runtime.NumGoroutine(),
+			"cpu":          runtime.NumCPU(),
+			"memmory":      mem.HeapAlloc / (1024 * 1024),
+			"allObjects":   mem.Mallocs,
+			"freesObject":  mem.Frees,
+			"activeObject": mem.Mallocs - mem.Frees,
+		}
 		tempStats.UpTime = time.Now().Sub(stats.StartDate)
 		tempStats.UpTimeStr = tempStats.UpTime.String()
 		tempStats.SuccesReqCnt = atomic.LoadUint64(&stats.SuccesReqCnt)
