@@ -5,15 +5,15 @@ import (
 	"os"
 )
 
-// //LoggerWrapper - обертка, адаптер для любого типа логера
-// type LoggerWrapper func(string, ...interface{})
+//LoggerWrapper - обертка, адаптер для любого типа логера
+type LoggerWrapper func() func(string, ...interface{})
 
-// // Printf - реализация интерфейса необходимого для работы retryablehttp
-// func (log LoggerWrapper) Printf(str string, args ...interface{}) {
-// 	log(str, args...)
-// }
+// Printf - реализация интерфейса необходимого для работы retryablehttp
+func (log LoggerWrapper) Printf(str string, args ...interface{}) {
+	log()(str, args...)
+}
 
-type LoggerWriterWraper func(string)
+type LoggerWriterWraper func() func(string)
 
 func (log LoggerWriterWraper) Write(buf []byte) (int, error) {
 	defer func() {
@@ -21,7 +21,7 @@ func (log LoggerWriterWraper) Write(buf []byte) (int, error) {
 			os.Stderr.WriteString(fmt.Sprintf("%v", err))
 		}
 	}()
-	log(string(buf))
+	log()(string(buf))
 	return len(buf), nil
 }
 
@@ -31,6 +31,6 @@ func (log LoggerWriterWraper) WriteString(buf string) (int, error) {
 			os.Stderr.WriteString(fmt.Sprintf("%v", err))
 		}
 	}()
-	log(buf)
+	log()(buf)
 	return len(buf), nil
 }
