@@ -3,6 +3,7 @@ package golang
 import (
 	"context"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -27,7 +28,7 @@ func ContextMiddleware(c *gin.Context) {
 
 //AddServerStatsHandler - Выполняет сбор всей необходимой информации о сервисе, и текущем его состоянии
 // не зависит от сервиса и будет переиспользован во всех сервисах приложения
-func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo) {
+func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, db *sql.DB) {
 	var stats = ServerStatus{StartDate: time.Now(), Info: *info}
 	router.Use(func(c *gin.Context) {
 		method := c.Request.Method
@@ -56,6 +57,10 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo) {
 	})
 
 	router.GET(url, func(c *gin.Context) {
+		if err := db.Ping(); err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, EgeonError{Code: DatabaseError, Description: err.Error()})
+			return
+		}
 		var mem runtime.MemStats
 		runtime.ReadMemStats(&mem)
 		var tempStats = ServerStatus{StartDate: stats.StartDate, Info: stats.Info}
