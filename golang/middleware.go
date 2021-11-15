@@ -13,6 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/blabu/egeonLib/golang"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +29,7 @@ func ContextMiddleware(c *gin.Context) {
 //AddServerStatsHandler - Выполняет сбор всей необходимой информации о сервисе, и текущем его состоянии
 // не зависит от сервиса и будет переиспользован во всех сервисах приложения
 func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, checkService func() error) {
+	var mem runtime.MemStats
 	var stats = ServerStatus{StartDate: time.Now(), Info: *info}
 	router.Use(func(c *gin.Context) {
 		method := c.Request.Method
@@ -60,7 +62,6 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, che
 			c.AbortWithStatusJSON(http.StatusInternalServerError, EgeonError{Code: ServiceWorkError, Description: err.Error()})
 			return
 		}
-		var mem runtime.MemStats
 		runtime.ReadMemStats(&mem)
 		var tempStats = ServerStatus{StartDate: stats.StartDate, Info: stats.Info}
 		tempStats.Addition = map[string]interface{}{
@@ -82,6 +83,35 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, che
 		tempStats.MiddleReqTime = atomic.LoadInt64(&stats.MiddleReqTime)
 		c.JSON(http.StatusOK, tempStats)
 	})
+}
+
+func GetServerStatusHandler(status golang.ServerStatus, nowConnected *int32, checkService func() error) http.HandlerFunc {
+	status.StartDate = time.Now()
+	var mem runtime.MemStats
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := checkService(); err != nil {
+			w.Header().Add("Content-Type", "text/plain")
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		runtime.ReadMemStats(&mem)
+		status.Addition = map[string]interface{}{
+			"memmory":      mem.HeapAlloc / (1024 * 1024),
+			"allObjects":   mem.Mallocs,
+			"freesObject":  mem.Frees,
+			"nowConnected": atomic.LoadInt32(nowConnected),
+			"routine":      runtime.NumGoroutine(),
+			"cpu":          runtime.NumCPU(),
+			"activeObject": mem.Mallocs - mem.Frees,
+		}
+		status.UpTime = time.Now().Sub(status.StartDate)
+		status.UpTimeStr = time.Now().Sub(status.StartDate).String()
+
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(status)
+	}
 }
 
 //FormRequestID - формирует строку с идентификатором запроса
