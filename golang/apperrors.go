@@ -42,6 +42,7 @@ const (
 	DoNotBeHere
 	Permission
 	ValidateError
+	ServiceWorkError
 )
 
 type errType error
