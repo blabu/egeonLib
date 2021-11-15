@@ -13,7 +13,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/blabu/egeonLib/golang"
 	"github.com/gin-gonic/gin"
 )
 
@@ -85,7 +84,7 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, che
 	})
 }
 
-func GetServerStatusHandler(status golang.ServerStatus, nowConnected *int32, checkService func() error) http.HandlerFunc {
+func GetServerStatusHandler(status ServerStatus, nowConnected *int32, checkService func() error) http.HandlerFunc {
 	status.StartDate = time.Now()
 	var mem runtime.MemStats
 	return func(w http.ResponseWriter, r *http.Request) {
