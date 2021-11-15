@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//writerWrap - need to store request body when you do request to cache it after success execution
 type writerWrap struct {
 	gin.ResponseWriter
 	body bytes.Buffer
@@ -32,7 +33,9 @@ func hash(url string) string {
 	return base64.StdEncoding.EncodeToString(reqURI[:])
 }
 
-//BuildRequestMiddleware - create middleware that cached requests by user requestPerUser - is a template key for Sprintf with to parameters %s and %s
+//BuildRequestMiddleware - create middleware that cached requests by user
+// requestPerUser - is a template key that is Sprintf template with to parameters %s and %s
+// requestPerUser key forms with userID and md5 hash sum for request URI
 func BuildRequestMiddleware(cache Model, log io.StringWriter, requestPerUser string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Method != "GET" {
@@ -59,7 +62,7 @@ func BuildRequestMiddleware(cache Model, log io.StringWriter, requestPerUser str
 				log.WriteString(fmt.Sprintf("Result finded in cache. Status: %d", resp.Status))
 				c.Writer.WriteHeader(resp.Status)
 				c.Writer.Write(resp.Body)
-				c.Abort()
+				c.Abort() //stop request execution
 				return
 			}
 			log.WriteString("Undefined result in cache")
