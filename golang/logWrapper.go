@@ -10,6 +10,11 @@ type LoggerWrapper func() func(string, ...interface{})
 
 // Printf - реализация интерфейса необходимого для работы retryablehttp
 func (log LoggerWrapper) Printf(str string, args ...interface{}) {
+	defer func() {
+		if err := recover(); err != nil {
+			os.Stderr.WriteString(fmt.Sprintf("%v", err))
+		}
+	}()
 	log()(str, args...)
 }
 
