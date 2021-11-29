@@ -58,6 +58,8 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	req.Header.Add(AllowedRoleHeaderKey, allowedRole)
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("content-type", "application/json")
 
 	resp, err := client.Do(req)
 	if err != nil {
