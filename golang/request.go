@@ -63,6 +63,9 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 
 	resp, err := client.Do(req)
 	if err != nil {
+		if resp != nil && resp.Body != nil {
+			resp.Body.Close()
+		}
 		return nil, err
 	}
 	defer resp.Body.Close()
