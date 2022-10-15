@@ -101,12 +101,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang(out *jwriter.Writer, in 
 		out.RawString(prefix)
 		out.Uint32(uint32(in.UserAddID))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifiedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
@@ -1445,12 +1445,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang8(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
@@ -1578,12 +1578,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang9(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.Uint32(uint32(in.ModifiedBy))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
@@ -2144,17 +2144,17 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang13(out *jwriter.Writer, i
 		out.RawString(prefix)
 		out.String(string(in.MicroDistrict))
 	}
-	if in.Street != "" {
+	{
 		const prefix string = ",\"street\":"
 		out.RawString(prefix)
 		out.String(string(in.Street))
 	}
-	if in.Build != "" {
+	{
 		const prefix string = ",\"build\":"
 		out.RawString(prefix)
 		out.String(string(in.Build))
 	}
-	{
+	if in.Apartment != "" {
 		const prefix string = ",\"apartment\":"
 		out.RawString(prefix)
 		out.String(string(in.Apartment))
@@ -2179,12 +2179,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang13(out *jwriter.Writer, i
 		out.RawString(prefix)
 		(in.Comment).MarshalEasyJSON(out)
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())

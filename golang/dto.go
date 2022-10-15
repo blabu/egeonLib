@@ -79,15 +79,15 @@ type Address struct {
 	City          string    `json:"city"`
 	District      string    `json:"district,omitempty"`
 	MicroDistrict string    `json:"microDistrict,omitempty"`
-	Street        string    `json:"street,omitempty"`
-	Build         string    `json:"build,omitempty"`
-	Apartment     string    `json:"apartment"`
+	Street        string    `json:"street"`
+	Build         string    `json:"build"`
+	Apartment     string    `json:"apartment,omitempty"`
 	Lat           float64   `json:"lat"`
 	Lng           float64   `json:"lng"`
 	PostCode      string    `json:"postCode,omitempty"`
 	Comment       Comment   `json:"comment,omitempty"`
-	AddedDate     time.Time `json:"addedDate"`
-	ModifiedDate  time.Time `json:"modifDate"`
+	AddedDate     time.Time `json:"addedDate,omitempty"`
+	ModifiedDate  time.Time `json:"modifDate,omitempty"`
 	AddedByID     uint32    `json:"addedById,omitempty"`
 	Status        Status    `json:"status,omitempty"`
 	FullName      string    `json:"fullName,omitempty"`
@@ -102,8 +102,8 @@ type Group struct {
 	OwnerID      uint32    `json:"ownerId,omitempty"`   // Создатель группы может быть NULL
 	CompanyID    uint32    `json:"comapnyId,omitempty"` // Если группа создана для компании
 	ModifiedBy   uint32    `json:"modifiedBy,omitempty"`
-	AddedDate    time.Time `json:"addedDate"`
-	ModifiedDate time.Time `json:"modifDate"`
+	AddedDate    time.Time `json:"addedDate,omitempty"`
+	ModifiedDate time.Time `json:"modifDate,omitempty"`
 	Logo         string    `json:"logo,omitempty"`
 	Status       Status    `json:"status,omitempty"`
 }
@@ -130,8 +130,8 @@ type Role struct {
 	URL          string    `json:"url"`
 	Method       string    `json:"method"`
 	Description  string    `json:"description,omitempty"`
-	AddedDate    time.Time `json:"addedDate"`
-	ModifiedDate time.Time `json:"modifDate"`
+	AddedDate    time.Time `json:"addedDate,omitempty"`
+	ModifiedDate time.Time `json:"modifDate,omitempty"`
 	UserAddID    uint32    `json:"userAddId,omitempty"`
 	Status       Status    `json:"status,omitempty"`
 }
@@ -156,8 +156,8 @@ type UsersGroup struct {
 	IsCreate     bool      `json:"isCreate"`
 	IsDelete     bool      `json:"isDelete"`
 	UserAddID    uint32    `json:"userAddId,omitempty"`
-	AddedDate    time.Time `json:"addedDate"`
-	ModifiedDate time.Time `json:"modifiedDate"`
+	AddedDate    time.Time `json:"addedDate,omitempty"`
+	ModifiedDate time.Time `json:"modifiedDate,omitempty"`
 }
 
 // User - пользователи системы
