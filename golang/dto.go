@@ -6,10 +6,10 @@ import "time"
 type ServerInfo struct {
 	Name       string                 `json:"name"`
 	Version    string                 `json:"version"`
-	About      string                 `json:"about"`
-	Maintainer string                 `json:"maintainer"`
-	Routes     map[string]string      `json:"routes"`
-	BaseTypes  map[string]interface{} `json:"types"`
+	About      string                 `json:"about,omitempty"`
+	Maintainer string                 `json:"maintainer,omitempty"`
+	Routes     map[string]string      `json:"routes,omitempty"`
+	BaseTypes  map[string]interface{} `json:"types,omitempty"`
 }
 
 // DBStats contains database statistics.
@@ -31,18 +31,18 @@ type DBStats struct {
 
 //ServerStatus - полная инфомация о сервисе в системе Егеон
 type ServerStatus struct {
-	Info          ServerInfo             `json:"info"`
-	Addition      map[string]interface{} `json:"addition"`
-	StartDate     time.Time              `json:"startDate"`
-	UpTime        time.Duration          `json:"upTime"`
-	UpTimeStr     string                 `json:"upTimeStr"`
-	SuccesReqCnt  uint64                 `json:"succesReqCnt"`
-	FaileReqCnt   uint64                 `json:"faileReqCnt"`
-	FaileGetCnt   uint64                 `json:"faileGetCnt"`
-	FailePostCnt  uint64                 `json:"failePostCnt"`
-	FailePutCnt   uint64                 `json:"failePutCnt"`
-	FaileDelCnt   uint64                 `json:"faileDelCnt"`
-	MiddleReqTime int64                  `json:"middleReqTime"`
+	Info          ServerInfo             `json:"info,omitempty"`
+	Addition      map[string]interface{} `json:"addition,omitempty"`
+	StartDate     time.Time              `json:"startDate,omitempty"`
+	UpTime        time.Duration          `json:"upTime,omitempty"`
+	UpTimeStr     string                 `json:"upTimeStr,omitempty"`
+	SuccesReqCnt  uint64                 `json:"succesReqCnt,omitempty"`
+	FaileReqCnt   uint64                 `json:"faileReqCnt,omitempty"`
+	FaileGetCnt   uint64                 `json:"faileGetCnt,omitempty"`
+	FailePostCnt  uint64                 `json:"failePostCnt,omitempty"`
+	FailePutCnt   uint64                 `json:"failePutCnt,omitempty"`
+	FaileDelCnt   uint64                 `json:"faileDelCnt,omitempty"`
+	MiddleReqTime int64                  `json:"middleReqTime,omitempty"`
 }
 
 /*
@@ -54,21 +54,21 @@ type ServerStatus struct {
 
 //Status - Содержит информацию о статусе счетчика, корректора, объекта, узла учета
 type Status struct {
-	ID          uint16 `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          uint16 `json:"id,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 //Comment - определяет коментарии в системе
 type Comment struct {
-	ID           uint64    `json:"id"`
-	Head         string    `json:"head"`
-	Data         string    `json:"data"`
-	ContentType  string    `json:"type"`
-	UserAddID    uint32    `json:"userAddId"`
-	AddedDate    time.Time `json:"addedDate"`
-	ModifiedDate time.Time `json:"modifiedDate"`
-	Status       Status    `json:"status"`
+	ID           uint64    `json:"id,omitempty"`
+	Head         string    `json:"head,omitempty"`
+	Data         string    `json:"data,omitempty"`
+	ContentType  string    `json:"type,omitempty"`
+	UserAddID    uint32    `json:"userAddId,omitempty"`
+	AddedDate    time.Time `json:"addedDate,omitempty"`
+	ModifiedDate time.Time `json:"modifiedDate,omitempty"`
+	Status       Status    `json:"status,omitempty"`
 }
 
 //Address - сущность определяющая адресс
@@ -77,20 +77,20 @@ type Address struct {
 	Country       string    `json:"country"`
 	Region        string    `json:"region"`
 	City          string    `json:"city"`
-	District      string    `json:"district"`
-	MicroDistrict string    `json:"microDistrict"`
-	Street        string    `json:"street"`
-	Build         string    `json:"build"`
+	District      string    `json:"district,omitempty"`
+	MicroDistrict string    `json:"microDistrict,omitempty"`
+	Street        string    `json:"street,omitempty"`
+	Build         string    `json:"build,omitempty"`
 	Apartment     string    `json:"apartment"`
 	Lat           float64   `json:"lat"`
 	Lng           float64   `json:"lng"`
-	PostCode      string    `json:"postCode"`
-	Comment       Comment   `json:"comment"`
+	PostCode      string    `json:"postCode,omitempty"`
+	Comment       Comment   `json:"comment,omitempty"`
 	AddedDate     time.Time `json:"addedDate"`
 	ModifiedDate  time.Time `json:"modifDate"`
-	AddedByID     uint32    `json:"addedById"`
-	Status        Status    `json:"status"`
-	FullName      string    `json:"fullName"`
+	AddedByID     uint32    `json:"addedById,omitempty"`
+	Status        Status    `json:"status,omitempty"`
+	FullName      string    `json:"fullName,omitempty"`
 }
 
 //Group - функционал по группировке точек учета
@@ -98,29 +98,29 @@ type Address struct {
 type Group struct {
 	ID           uint64    `json:"id"`
 	Name         string    `json:"name"`
-	Description  string    `json:"description"`
-	OwnerID      uint32    `json:"ownerId"`   // Создатель группы может быть NULL
-	CompanyID    uint32    `json:"comapnyId"` // Если группа создана для компании
-	ModifiedBy   uint32    `json:"modifiedBy"`
+	Description  string    `json:"description,omitempty"`
+	OwnerID      uint32    `json:"ownerId,omitempty"`   // Создатель группы может быть NULL
+	CompanyID    uint32    `json:"comapnyId,omitempty"` // Если группа создана для компании
+	ModifiedBy   uint32    `json:"modifiedBy,omitempty"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifDate"`
-	Logo         string    `json:"logo"`
-	Status       Status    `json:"status"`
+	Logo         string    `json:"logo,omitempty"`
+	Status       Status    `json:"status,omitempty"`
 }
 
 // Company - объект описывает компании в системе
 type Company struct {
 	ID           uint32    `json:"id"`
 	Name         string    `json:"name"`
-	Description  string    `json:"description"`
-	Code         uint64    `json:"code"`
-	Addr         Address   `json:"address"`
-	UserAddID    uint32    `json:"userAddId"`
-	IsControl    bool      `json:"isControl"`
-	Logo         string    `json:"logo"`
-	AddedDate    time.Time `json:"addedDate"`
-	ModifiedDate time.Time `json:"modifDate"`
-	Status       Status    `json:"status"`
+	Description  string    `json:"description,omitempty"`
+	Code         uint64    `json:"code,omitempty"`
+	Addr         Address   `json:"address,omitempty"`
+	UserAddID    uint32    `json:"userAddId,omitempty"`
+	IsControl    bool      `json:"isControl,omitempty"`
+	Logo         string    `json:"logo,omitempty"`
+	AddedDate    time.Time `json:"addedDate,omitempty"`
+	ModifiedDate time.Time `json:"modifDate,omitempty"`
+	Status       Status    `json:"status,omitempty"`
 }
 
 // Role - роли
@@ -129,11 +129,11 @@ type Role struct {
 	Name         string    `json:"name"`
 	URL          string    `json:"url"`
 	Method       string    `json:"method"`
-	Description  string    `json:"description"`
+	Description  string    `json:"description,omitempty"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifDate"`
-	UserAddID    uint32    `json:"userAddId"`
-	Status       Status    `json:"status"`
+	UserAddID    uint32    `json:"userAddId,omitempty"`
+	Status       Status    `json:"status,omitempty"`
 }
 
 //RoleSets - набор ролей, определяет наборы предустановленных ролей для определенный вариантов пользователей.
@@ -141,8 +141,8 @@ type Role struct {
 // В базе обязательно должен содержатся набор ролей с именем default - это базовые роли пользователя,
 // которые будут ему назначены при регистрации в системе. Нужны для удобства в админке
 type RoleSets struct {
-	Name  string `json:"name"`
-	Roles []Role `json:"roles"`
+	Name  string `json:"name,omitempty"`
+	Roles []Role `json:"roles,omitempty"`
 }
 
 // SessionKey - Создание нового типа для ключа сессии позволяет осуществлять switch case по типу
@@ -151,11 +151,11 @@ type SessionKey string
 // UsersGroup - TODO create user groups interface in the futer (пока не реализовано)
 type UsersGroup struct {
 	UserID       uint32    `json:"userId"`
-	Group        Group     `json:"group"`
+	Group        Group     `json:"group,omitempty"`
 	IsUpdate     bool      `json:"isUpdate"`
 	IsCreate     bool      `json:"isCreate"`
 	IsDelete     bool      `json:"isDelete"`
-	UserAddID    uint32    `json:"userAddId"`
+	UserAddID    uint32    `json:"userAddId,omitempty"`
 	AddedDate    time.Time `json:"addedDate"`
 	ModifiedDate time.Time `json:"modifiedDate"`
 }
@@ -163,41 +163,41 @@ type UsersGroup struct {
 // User - пользователи системы
 type User struct {
 	ID                uint32       `json:"id"`
-	Profile           UserProfile  `json:"profile"`
+	Profile           UserProfile  `json:"profile,omitempty"`
 	Email             string       `json:"email"`
 	IsEmailConfirm    bool         `json:"isEmailConfirm"`
-	PassHash          string       `json:"passHash"`
-	Salt              string       `json:"salt"`
-	Phone             string       `json:"phone"`
-	Company           Company      `json:"company"`
-	IsComapanyConfirm bool         `json:"isCompanyConfirm"`
-	AccessFailedCount int          `json:"accesFailedCnt"`
-	RestorePassword   bool         `json:"restorePassword"`
-	LastActivity      time.Time    `json:"lastActivity"`
-	AddedDate         time.Time    `json:"addedDate"`
-	ModifiedDate      time.Time    `json:"modifDate"`
-	Status            Status       `json:"status"`
-	Roles             []Role       `json:"roles"`
-	UsersGroups       []UsersGroup `json:"usersGroups"`
-	SessionKey        SessionKey   `json:"sessionKey"`
-	ExpireDate        time.Time    `json:"expired"`
+	PassHash          string       `json:"passHash,omitempty"`
+	Salt              string       `json:"salt,omitempty"`
+	Phone             string       `json:"phone,omitempty"`
+	Company           Company      `json:"company,omitempty"`
+	IsComapanyConfirm bool         `json:"isCompanyConfirm,omitempty"`
+	AccessFailedCount int          `json:"accesFailedCnt,omitempty"`
+	RestorePassword   bool         `json:"restorePassword,omitempty"`
+	LastActivity      time.Time    `json:"lastActivity,omitempty"`
+	AddedDate         time.Time    `json:"addedDate,omitempty"`
+	ModifiedDate      time.Time    `json:"modifDate,omitempty"`
+	Status            Status       `json:"status,omitempty"`
+	Roles             []Role       `json:"roles,omitempty"`
+	UsersGroups       []UsersGroup `json:"usersGroups,omitempty"`
+	SessionKey        SessionKey   `json:"sessionKey,omitempty"`
+	ExpireDate        time.Time    `json:"expired,omitempty"`
 }
 
 //UserProfile - хранит данные профиля
 type UserProfile struct {
-	ID             uint32    `json:"id"`
-	LastName       string    `json:"lastName"`
-	Name           string    `json:"name"`
-	PatronymicName string    `json:"nick"`
-	Info           string    `json:"info"`
-	Country        string    `json:"country"`
-	Region         string    `json:"region"`
-	City           string    `json:"city"`
-	Lat            float64   `json:"lat"`
-	Lng            float64   `json:"lng"`
-	AvatarB64      string    `json:"avatarB64"`
-	AddedDate      time.Time `json:"addedDate"`
-	ModifiedDate   time.Time `json:"modifDate"`
+	ID             uint32    `json:"id,omitempty"`
+	LastName       string    `json:"lastName,omitempty"`
+	Name           string    `json:"name,omitempty"`
+	PatronymicName string    `json:"nick,omitempty"`
+	Info           string    `json:"info,omitempty"`
+	Country        string    `json:"country,omitempty"`
+	Region         string    `json:"region,omitempty"`
+	City           string    `json:"city,omitempty"`
+	Lat            float64   `json:"lat,omitempty"`
+	Lng            float64   `json:"lng,omitempty"`
+	AvatarB64      string    `json:"avatarB64,omitempty"`
+	AddedDate      time.Time `json:"addedDate,omitempty"`
+	ModifiedDate   time.Time `json:"modifDate,omitempty"`
 }
 
 // APIToken - структура определяет ключ доступа к API сервера
@@ -206,10 +206,10 @@ type UserProfile struct {
 // Строго на определенное время
 type APIToken struct {
 	ID          uint64    `json:"id"`
-	OwnerID     uint32    `json:"ownerId"`
+	OwnerID     uint32    `json:"ownerId,omitempty"`
 	Token       string    `json:"token"`
-	Description string    `json:"description"`
-	Roles       []Role    `json:"roles"`
+	Description string    `json:"description,omitempty"`
+	Roles       []Role    `json:"roles,omitempty"`
 	AddedDate   time.Time `json:"addedDate"`
 	ExpireDate  time.Time `json:"expired"`
 }
@@ -217,13 +217,13 @@ type APIToken struct {
 //UserLog - структура для хранения активностей пользователя
 type UserLog struct {
 	UserID       uint32        `json:"userId"`
-	SessionKey   SessionKey    `json:"sessionKey"`
-	IP           string        `json:"ip"`
+	SessionKey   SessionKey    `json:"sessionKey,omitempty"`
+	IP           string        `json:"ip,omitempty"`
 	URL          string        `json:"url"`
 	Method       string        `json:"method"`
 	IsAborted    bool          `json:"isAborted"`
 	RequestID    string        `json:"requestId"`
-	UserAgent    string        `json:"browser"`
+	UserAgent    string        `json:"browser,omitempty"`
 	ResponceTime time.Duration `json:"responceTime"`
 	AddeDate     time.Time     `json:"addedDate"`
 }
