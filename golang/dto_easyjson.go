@@ -76,7 +76,7 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang(out *jwriter.Writer, in 
 		out.RawString(prefix[1:])
 		out.Uint32(uint32(in.UserID))
 	}
-	{
+	if true {
 		const prefix string = ",\"group\":"
 		out.RawString(prefix)
 		(in.Group).MarshalEasyJSON(out)
@@ -96,17 +96,17 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang(out *jwriter.Writer, in 
 		out.RawString(prefix)
 		out.Bool(bool(in.IsDelete))
 	}
-	{
+	if in.UserAddID != 0 {
 		const prefix string = ",\"userAddId\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.UserAddID))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifiedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
@@ -200,69 +200,130 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang1(out *jwriter.Writer, in
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Uint32(uint32(in.ID))
 	}
-	{
+	if in.LastName != "" {
 		const prefix string = ",\"lastName\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.LastName))
 	}
-	{
+	if in.Name != "" {
 		const prefix string = ",\"name\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Name))
 	}
-	{
+	if in.PatronymicName != "" {
 		const prefix string = ",\"nick\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.PatronymicName))
 	}
-	{
+	if in.Info != "" {
 		const prefix string = ",\"info\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Info))
 	}
-	{
+	if in.Country != "" {
 		const prefix string = ",\"country\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Country))
 	}
-	{
+	if in.Region != "" {
 		const prefix string = ",\"region\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Region))
 	}
-	{
+	if in.City != "" {
 		const prefix string = ",\"city\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.City))
 	}
-	{
+	if in.Lat != 0 {
 		const prefix string = ",\"lat\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Float64(float64(in.Lat))
 	}
-	{
+	if in.Lng != 0 {
 		const prefix string = ",\"lng\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Float64(float64(in.Lng))
 	}
-	{
+	if in.AvatarB64 != "" {
 		const prefix string = ",\"avatarB64\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.AvatarB64))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
 	out.RawByte('}')
@@ -351,12 +412,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang2(out *jwriter.Writer, in
 		out.RawString(prefix[1:])
 		out.Uint32(uint32(in.UserID))
 	}
-	{
+	if in.SessionKey != "" {
 		const prefix string = ",\"sessionKey\":"
 		out.RawString(prefix)
 		out.String(string(in.SessionKey))
 	}
-	{
+	if in.IP != "" {
 		const prefix string = ",\"ip\":"
 		out.RawString(prefix)
 		out.String(string(in.IP))
@@ -381,7 +442,7 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang2(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.String(string(in.RequestID))
 	}
-	{
+	if in.UserAgent != "" {
 		const prefix string = ",\"browser\":"
 		out.RawString(prefix)
 		out.String(string(in.UserAgent))
@@ -548,7 +609,7 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang3(out *jwriter.Writer, in
 		out.RawString(prefix[1:])
 		out.Uint32(uint32(in.ID))
 	}
-	{
+	if true {
 		const prefix string = ",\"profile\":"
 		out.RawString(prefix)
 		(in.Profile).MarshalEasyJSON(out)
@@ -563,67 +624,65 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang3(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.Bool(bool(in.IsEmailConfirm))
 	}
-	{
+	if in.PassHash != "" {
 		const prefix string = ",\"passHash\":"
 		out.RawString(prefix)
 		out.String(string(in.PassHash))
 	}
-	{
+	if in.Salt != "" {
 		const prefix string = ",\"salt\":"
 		out.RawString(prefix)
 		out.String(string(in.Salt))
 	}
-	{
+	if in.Phone != "" {
 		const prefix string = ",\"phone\":"
 		out.RawString(prefix)
 		out.String(string(in.Phone))
 	}
-	{
+	if true {
 		const prefix string = ",\"company\":"
 		out.RawString(prefix)
 		(in.Company).MarshalEasyJSON(out)
 	}
-	{
+	if in.IsComapanyConfirm {
 		const prefix string = ",\"isCompanyConfirm\":"
 		out.RawString(prefix)
 		out.Bool(bool(in.IsComapanyConfirm))
 	}
-	{
+	if in.AccessFailedCount != 0 {
 		const prefix string = ",\"accesFailedCnt\":"
 		out.RawString(prefix)
 		out.Int(int(in.AccessFailedCount))
 	}
-	{
+	if in.RestorePassword {
 		const prefix string = ",\"restorePassword\":"
 		out.RawString(prefix)
 		out.Bool(bool(in.RestorePassword))
 	}
-	{
+	if true {
 		const prefix string = ",\"lastActivity\":"
 		out.RawString(prefix)
 		out.Raw((in.LastActivity).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"status\":"
 		out.RawString(prefix)
 		(in.Status).MarshalEasyJSON(out)
 	}
-	{
+	if len(in.Roles) != 0 {
 		const prefix string = ",\"roles\":"
 		out.RawString(prefix)
-		if in.Roles == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
+		{
 			out.RawByte('[')
 			for v3, v4 := range in.Roles {
 				if v3 > 0 {
@@ -634,12 +693,10 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang3(out *jwriter.Writer, in
 			out.RawByte(']')
 		}
 	}
-	{
+	if len(in.UsersGroups) != 0 {
 		const prefix string = ",\"usersGroups\":"
 		out.RawString(prefix)
-		if in.UsersGroups == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
+		{
 			out.RawByte('[')
 			for v5, v6 := range in.UsersGroups {
 				if v5 > 0 {
@@ -650,12 +707,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang3(out *jwriter.Writer, in
 			out.RawByte(']')
 		}
 	}
-	{
+	if in.SessionKey != "" {
 		const prefix string = ",\"sessionKey\":"
 		out.RawString(prefix)
 		out.String(string(in.SessionKey))
 	}
-	{
+	if true {
 		const prefix string = ",\"expired\":"
 		out.RawString(prefix)
 		out.Raw((in.ExpireDate).MarshalJSON())
@@ -725,19 +782,30 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang4(out *jwriter.Writer, in
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Uint16(uint16(in.ID))
 	}
-	{
+	if in.Name != "" {
 		const prefix string = ",\"name\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Name))
 	}
-	{
+	if in.Description != "" {
 		const prefix string = ",\"description\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Description))
 	}
 	out.RawByte('}')
@@ -792,7 +860,11 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang5(in *jlexer.Lexer, out *
 				in.Skip()
 			} else {
 				in.Delim('{')
-				out.Addition = make(map[string]interface{})
+				if !in.IsDelim('}') {
+					out.Addition = make(map[string]interface{})
+				} else {
+					out.Addition = nil
+				}
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
@@ -845,17 +917,21 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang5(out *jwriter.Writer, in
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if true {
 		const prefix string = ",\"info\":"
+		first = false
 		out.RawString(prefix[1:])
 		(in.Info).MarshalEasyJSON(out)
 	}
-	{
+	if len(in.Addition) != 0 {
 		const prefix string = ",\"addition\":"
-		out.RawString(prefix)
-		if in.Addition == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
-			out.RawString(`null`)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
 		} else {
+			out.RawString(prefix)
+		}
+		{
 			out.RawByte('{')
 			v8First := true
 			for v8Name, v8Value := range in.Addition {
@@ -877,54 +953,104 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang5(out *jwriter.Writer, in
 			out.RawByte('}')
 		}
 	}
-	{
+	if true {
 		const prefix string = ",\"startDate\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Raw((in.StartDate).MarshalJSON())
 	}
-	{
+	if in.UpTime != 0 {
 		const prefix string = ",\"upTime\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.UpTime))
 	}
-	{
+	if in.UpTimeStr != "" {
 		const prefix string = ",\"upTimeStr\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.UpTimeStr))
 	}
-	{
+	if in.SuccesReqCnt != 0 {
 		const prefix string = ",\"succesReqCnt\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint64(uint64(in.SuccesReqCnt))
 	}
-	{
+	if in.FaileReqCnt != 0 {
 		const prefix string = ",\"faileReqCnt\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint64(uint64(in.FaileReqCnt))
 	}
-	{
+	if in.FaileGetCnt != 0 {
 		const prefix string = ",\"faileGetCnt\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint64(uint64(in.FaileGetCnt))
 	}
-	{
+	if in.FailePostCnt != 0 {
 		const prefix string = ",\"failePostCnt\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint64(uint64(in.FailePostCnt))
 	}
-	{
+	if in.FailePutCnt != 0 {
 		const prefix string = ",\"failePutCnt\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint64(uint64(in.FailePutCnt))
 	}
-	{
+	if in.FaileDelCnt != 0 {
 		const prefix string = ",\"faileDelCnt\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint64(uint64(in.FaileDelCnt))
 	}
-	{
+	if in.MiddleReqTime != 0 {
 		const prefix string = ",\"middleReqTime\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Int64(int64(in.MiddleReqTime))
 	}
 	out.RawByte('}')
@@ -985,7 +1111,11 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang6(in *jlexer.Lexer, out *
 				in.Skip()
 			} else {
 				in.Delim('{')
-				out.Routes = make(map[string]string)
+				if !in.IsDelim('}') {
+					out.Routes = make(map[string]string)
+				} else {
+					out.Routes = nil
+				}
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
@@ -1001,7 +1131,11 @@ func easyjson56de76c1DecodeGithubComBlabuEgeonLibGolang6(in *jlexer.Lexer, out *
 				in.Skip()
 			} else {
 				in.Delim('{')
-				out.BaseTypes = make(map[string]interface{})
+				if !in.IsDelim('}') {
+					out.BaseTypes = make(map[string]interface{})
+				} else {
+					out.BaseTypes = nil
+				}
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
@@ -1042,22 +1176,20 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang6(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.String(string(in.Version))
 	}
-	{
+	if in.About != "" {
 		const prefix string = ",\"about\":"
 		out.RawString(prefix)
 		out.String(string(in.About))
 	}
-	{
+	if in.Maintainer != "" {
 		const prefix string = ",\"maintainer\":"
 		out.RawString(prefix)
 		out.String(string(in.Maintainer))
 	}
-	{
+	if len(in.Routes) != 0 {
 		const prefix string = ",\"routes\":"
 		out.RawString(prefix)
-		if in.Routes == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
-			out.RawString(`null`)
-		} else {
+		{
 			out.RawByte('{')
 			v11First := true
 			for v11Name, v11Value := range in.Routes {
@@ -1073,12 +1205,10 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang6(out *jwriter.Writer, in
 			out.RawByte('}')
 		}
 	}
-	{
+	if len(in.BaseTypes) != 0 {
 		const prefix string = ",\"types\":"
 		out.RawString(prefix)
-		if in.BaseTypes == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
-			out.RawString(`null`)
-		} else {
+		{
 			out.RawByte('{')
 			v12First := true
 			for v12Name, v12Value := range in.BaseTypes {
@@ -1184,17 +1314,21 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang7(out *jwriter.Writer, in
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.Name != "" {
 		const prefix string = ",\"name\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.Name))
 	}
-	{
+	if len(in.Roles) != 0 {
 		const prefix string = ",\"roles\":"
-		out.RawString(prefix)
-		if in.Roles == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
+		if first {
+			first = false
+			out.RawString(prefix[1:])
 		} else {
+			out.RawString(prefix)
+		}
+		{
 			out.RawByte('[')
 			for v14, v15 := range in.Roles {
 				if v14 > 0 {
@@ -1306,27 +1440,27 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang8(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.String(string(in.Method))
 	}
-	{
+	if in.Description != "" {
 		const prefix string = ",\"description\":"
 		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
-	{
+	if in.UserAddID != 0 {
 		const prefix string = ",\"userAddId\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.UserAddID))
 	}
-	{
+	if true {
 		const prefix string = ",\"status\":"
 		out.RawString(prefix)
 		(in.Status).MarshalEasyJSON(out)
@@ -1424,42 +1558,42 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang9(out *jwriter.Writer, in
 		out.RawString(prefix)
 		out.String(string(in.Name))
 	}
-	{
+	if in.Description != "" {
 		const prefix string = ",\"description\":"
 		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	{
+	if in.OwnerID != 0 {
 		const prefix string = ",\"ownerId\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.OwnerID))
 	}
-	{
+	if in.CompanyID != 0 {
 		const prefix string = ",\"comapnyId\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.CompanyID))
 	}
-	{
+	if in.ModifiedBy != 0 {
 		const prefix string = ",\"modifiedBy\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.ModifiedBy))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
-	{
+	if in.Logo != "" {
 		const prefix string = ",\"logo\":"
 		out.RawString(prefix)
 		out.String(string(in.Logo))
 	}
-	{
+	if true {
 		const prefix string = ",\"status\":"
 		out.RawString(prefix)
 		(in.Status).MarshalEasyJSON(out)
@@ -1681,47 +1815,47 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang11(out *jwriter.Writer, i
 		out.RawString(prefix)
 		out.String(string(in.Name))
 	}
-	{
+	if in.Description != "" {
 		const prefix string = ",\"description\":"
 		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	{
+	if in.Code != 0 {
 		const prefix string = ",\"code\":"
 		out.RawString(prefix)
 		out.Uint64(uint64(in.Code))
 	}
-	{
+	if true {
 		const prefix string = ",\"address\":"
 		out.RawString(prefix)
 		(in.Addr).MarshalEasyJSON(out)
 	}
-	{
+	if in.UserAddID != 0 {
 		const prefix string = ",\"userAddId\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.UserAddID))
 	}
-	{
+	if in.IsControl {
 		const prefix string = ",\"isControl\":"
 		out.RawString(prefix)
 		out.Bool(bool(in.IsControl))
 	}
-	{
+	if in.Logo != "" {
 		const prefix string = ",\"logo\":"
 		out.RawString(prefix)
 		out.String(string(in.Logo))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"status\":"
 		out.RawString(prefix)
 		(in.Status).MarshalEasyJSON(out)
@@ -1805,44 +1939,80 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang12(out *jwriter.Writer, i
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
+	if in.ID != 0 {
 		const prefix string = ",\"id\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.Uint64(uint64(in.ID))
 	}
-	{
+	if in.Head != "" {
 		const prefix string = ",\"head\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Head))
 	}
-	{
+	if in.Data != "" {
 		const prefix string = ",\"data\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Data))
 	}
-	{
+	if in.ContentType != "" {
 		const prefix string = ",\"type\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.ContentType))
 	}
-	{
+	if in.UserAddID != 0 {
 		const prefix string = ",\"userAddId\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Uint32(uint32(in.UserAddID))
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifiedDate\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"status\":"
-		out.RawString(prefix)
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		(in.Status).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
@@ -1964,12 +2134,12 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang13(out *jwriter.Writer, i
 		out.RawString(prefix)
 		out.String(string(in.City))
 	}
-	{
+	if in.District != "" {
 		const prefix string = ",\"district\":"
 		out.RawString(prefix)
 		out.String(string(in.District))
 	}
-	{
+	if in.MicroDistrict != "" {
 		const prefix string = ",\"microDistrict\":"
 		out.RawString(prefix)
 		out.String(string(in.MicroDistrict))
@@ -1984,7 +2154,7 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang13(out *jwriter.Writer, i
 		out.RawString(prefix)
 		out.String(string(in.Build))
 	}
-	{
+	if in.Apartment != "" {
 		const prefix string = ",\"apartment\":"
 		out.RawString(prefix)
 		out.String(string(in.Apartment))
@@ -1999,37 +2169,37 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang13(out *jwriter.Writer, i
 		out.RawString(prefix)
 		out.Float64(float64(in.Lng))
 	}
-	{
+	if in.PostCode != "" {
 		const prefix string = ",\"postCode\":"
 		out.RawString(prefix)
 		out.String(string(in.PostCode))
 	}
-	{
+	if true {
 		const prefix string = ",\"comment\":"
 		out.RawString(prefix)
 		(in.Comment).MarshalEasyJSON(out)
 	}
-	{
+	if true {
 		const prefix string = ",\"addedDate\":"
 		out.RawString(prefix)
 		out.Raw((in.AddedDate).MarshalJSON())
 	}
-	{
+	if true {
 		const prefix string = ",\"modifDate\":"
 		out.RawString(prefix)
 		out.Raw((in.ModifiedDate).MarshalJSON())
 	}
-	{
+	if in.AddedByID != 0 {
 		const prefix string = ",\"addedById\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.AddedByID))
 	}
-	{
+	if true {
 		const prefix string = ",\"status\":"
 		out.RawString(prefix)
 		(in.Status).MarshalEasyJSON(out)
 	}
-	{
+	if in.FullName != "" {
 		const prefix string = ",\"fullName\":"
 		out.RawString(prefix)
 		out.String(string(in.FullName))
@@ -2137,7 +2307,7 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang14(out *jwriter.Writer, i
 		out.RawString(prefix[1:])
 		out.Uint64(uint64(in.ID))
 	}
-	{
+	if in.OwnerID != 0 {
 		const prefix string = ",\"ownerId\":"
 		out.RawString(prefix)
 		out.Uint32(uint32(in.OwnerID))
@@ -2147,17 +2317,15 @@ func easyjson56de76c1EncodeGithubComBlabuEgeonLibGolang14(out *jwriter.Writer, i
 		out.RawString(prefix)
 		out.String(string(in.Token))
 	}
-	{
+	if in.Description != "" {
 		const prefix string = ",\"description\":"
 		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	{
+	if len(in.Roles) != 0 {
 		const prefix string = ",\"roles\":"
 		out.RawString(prefix)
-		if in.Roles == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
+		{
 			out.RawByte('[')
 			for v17, v18 := range in.Roles {
 				if v17 > 0 {
