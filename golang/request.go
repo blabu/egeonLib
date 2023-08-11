@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
+	"time"
 
 	retry "github.com/hashicorp/go-retryablehttp"
 )
@@ -30,6 +32,25 @@ func appendDefaultErrorHandler(client *retry.Client) {
 			}
 		}
 		return resp, nil
+	}
+}
+
+func FormCookie(host, cookieName, cookieValue string, expires time.Time) *http.Cookie {
+	var isSecure bool
+
+	if strings.HasPrefix(host, "https") {
+		isSecure = true
+	} else {
+		isSecure = false
+	}
+	return &http.Cookie{
+		Name:     cookieName,
+		Value:    cookieValue,
+		Path:     "/",
+		Expires:  expires.Local(),
+		MaxAge:   int(time.Since(expires).Seconds()),
+		SameSite: http.SameSiteNoneMode,
+		Secure:   isSecure,
 	}
 }
 
