@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
+	"time"
 
 	retry "github.com/hashicorp/go-retryablehttp"
 )
@@ -33,11 +35,30 @@ func appendDefaultErrorHandler(client *retry.Client) {
 	}
 }
 
-//DoRequest - create request and read answer
-//method can be GET, POST, PUT, DELETE (http method)
+func FormAppCookie(host, cookieName, cookieValue string, expires time.Time) *http.Cookie {
+	var isSecure bool
+
+	if strings.HasPrefix(host, "https") {
+		isSecure = true
+	} else {
+		isSecure = false
+	}
+	return &http.Cookie{
+		Name:     cookieName,
+		Value:    cookieValue,
+		Path:     "/",
+		Expires:  expires.Local(),
+		MaxAge:   int(time.Since(expires).Seconds()),
+		SameSite: http.SameSiteNoneMode,
+		Secure:   isSecure,
+	}
+}
+
+// DoRequest - create request and read answer
+// method can be GET, POST, PUT, DELETE (http method)
 // user in context is required
-//reqBody - can be nil
-func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
+// reqBody - can be nil
+func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte, cookieName string) ([]byte, error) {
 	if client.ErrorHandler == nil {
 		appendDefaultErrorHandler(client)
 	}
@@ -59,7 +80,7 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	req.Header.Add(AllowedRoleHeaderKey, allowedRole)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("content-type", "application/json")
+	req.AddCookie(FormAppCookie(reqURL.Host, cookieName, string(user.SessionKey), time.Now().Add(time.Minute)))
 
 	resp, err := client.Do(req)
 	if err != nil {
