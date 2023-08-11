@@ -7,8 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
-	"time"
 
 	retry "github.com/hashicorp/go-retryablehttp"
 )
@@ -35,38 +33,11 @@ func appendDefaultErrorHandler(client *retry.Client) {
 	}
 }
 
-func FormAppCookie(host, cookieName, cookieValue string, expires time.Time) *http.Cookie {
-	var isSecure bool
-
-	if strings.HasPrefix(host, "https") {
-		isSecure = true
-	} else {
-		isSecure = false
-	}
-	return &http.Cookie{
-		Name:     cookieName,
-		Value:    cookieValue,
-		Path:     "/",
-		Expires:  expires.Local(),
-		MaxAge:   int(time.Since(expires).Seconds()),
-		SameSite: http.SameSiteNoneMode,
-		Secure:   isSecure,
-	}
-}
-
-// DoRequest - create request and read answer
-// method can be GET, POST, PUT, DELETE (http method)
-// user in context is required
-// reqBody - can be nil
-func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte, cookieName string) ([]byte, error) {
-	if client.ErrorHandler == nil {
-		appendDefaultErrorHandler(client)
-	}
+func FormRequest(ctx context.Context, method string, reqURL url.URL, reqBody []byte) (*retry.Request, error) {
 	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
 		return nil, err
 	}
-
 	user, _ := ctx.Value(UserKey).(User)
 	reqID, _ := ctx.Value(RequestID).(string)
 	if len(reqID) == 0 {
@@ -80,14 +51,20 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	req.Header.Add(AllowedRoleHeaderKey, allowedRole)
 	req.Header.Add("Content-Type", "application/json")
-	req.AddCookie(FormAppCookie(reqURL.Host, cookieName, string(user.SessionKey), time.Now().Add(time.Minute)))
+	return req, nil
+}
 
+// DoRequest - create request and read answer
+// method can be GET, POST, PUT, DELETE (http method)
+// user in context is required
+// reqBody - can be nil
+func DoRequest(ctx context.Context, client *retry.Client, req *retry.Request) ([]byte, error) {
+	if client.ErrorHandler == nil {
+		appendDefaultErrorHandler(client)
+	}
 	resp, err := client.Do(req)
 	if err != nil {
-		if resp != nil && resp.Body != nil {
-			resp.Body.Close()
-		}
-		return nil, err
+		return nil, EgeonError{Code: InternalError, Description: "Request failed " + " error " + err.Error()}
 	}
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
