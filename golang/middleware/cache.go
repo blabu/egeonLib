@@ -48,7 +48,7 @@ func (m Model) Save(ctx context.Context) {
 
 func (m Model) Set(ctx context.Context, key string, resp *Responce) error {
 	if resp == nil {
-		return errors.New("bad responce for cache")
+		return errors.New("bad response for cache")
 	}
 	if data, err := json.Marshal(*resp); err == nil {
 		m.storage.Set(ctx, key, data, m.expireTime)
@@ -66,4 +66,12 @@ func (m Model) Get(ctx context.Context, key string) (*Responce, error) {
 	var resp Responce
 	err = json.Unmarshal(data, &resp)
 	return &resp, err
+}
+
+func (m Model) Delete(ctx context.Context, keyPattern string) error {
+	keys, err := m.storage.Keys(ctx, keyPattern).Result()
+	if err != nil {
+		return err
+	}
+	return m.storage.Del(ctx, keys...).Err()
 }
