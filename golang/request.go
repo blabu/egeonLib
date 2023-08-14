@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 
 	retry "github.com/hashicorp/go-retryablehttp"
 )
@@ -45,13 +46,14 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 		return nil, err
 	}
 	user, _ := ctx.Value(UserKey).(User)
+	user.UsersGroups = nil
 	reqID, _ := ctx.Value(RequestID).(string)
 	if len(reqID) == 0 {
 		reqID = FormRequestID(&user)
 	}
-	sign, _ := ctx.Value(SignKey).(string)
 	allowedRole, _ := ctx.Value(AllowedRoleKey).(string)
 	userJSON, _ := json.Marshal(&user)
+	sign := CreateSignature([]byte(os.Getenv(EgeonSecretKeyEnviron)), userJSON)
 	req.Header.Add(SignatureHeaderKey, sign)
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)

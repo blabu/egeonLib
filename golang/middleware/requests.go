@@ -52,7 +52,7 @@ func BuildRequestMiddleware(cache Model, log io.StringWriter, requestPerUser str
 		}
 		user, ok := c.Request.Context().Value(golang.UserKey).(golang.User)
 		if !ok {
-			log.WriteString("Undefined user work without cache")
+			log.WriteString("Undefined user, work without cache")
 			c.Next()
 			return
 		}

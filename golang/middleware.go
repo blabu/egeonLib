@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"runtime"
-	"strings"
 	"sync/atomic"
 	"time"
 
@@ -135,7 +134,8 @@ func CheckSignature(signature, userJSON, secret string) bool {
 	temp := []byte(userJSON + secret)
 	signatureHash := sha256.Sum256(temp)
 	origin := base64.StdEncoding.EncodeToString(signatureHash[:])
-	return strings.EqualFold(signature, origin)
+	os.Stderr.WriteString(fmt.Sprintf("secret: %s current sign: %s and origin sign: %s\n", secret, signature, origin))
+	return signature == origin
 }
 
 // ParseHeader - формирует контекст запроса исходя из заголовков HTTP запроса
