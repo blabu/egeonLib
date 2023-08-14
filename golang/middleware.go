@@ -134,7 +134,6 @@ func CheckSignature(signature, userJSON, secret string) bool {
 	temp := []byte(userJSON + secret)
 	signatureHash := sha256.Sum256(temp)
 	origin := base64.StdEncoding.EncodeToString(signatureHash[:])
-	os.Stderr.WriteString(fmt.Sprintf("secret: %s current sign: %s and origin sign: %s\n", secret, signature, origin))
 	return signature == origin
 }
 
