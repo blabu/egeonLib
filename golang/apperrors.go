@@ -16,7 +16,7 @@ func (e EgeonError) Error() string {
 }
 
 func (e EgeonError) MarshalJSON() ([]byte, error) {
-	return []byte(fmt.Sprintf("{\"Code\":%d, \"Description\": \"%s\"}", e.Code, e.Description)), nil
+	return []byte(fmt.Sprintf("{\"Code\":%d, \"Description\": %q}", e.Code, e.Description)), nil
 }
 
 const (
@@ -51,7 +51,7 @@ func GetErr(errMsg string) error {
 	return errors.New(errMsg)
 }
 
-//Errors - карта ошибок
+// Errors - карта ошибок
 var Errors map[string]errType
 
 func init() {

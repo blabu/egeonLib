@@ -62,7 +62,7 @@ func BuildRequestMiddleware(cache Model, log io.StringWriter, requestPerUser str
 			c.Request.Method == http.MethodDelete {
 			// clear cache for current user if we got some mutation request and it was success
 			c.Next()
-			if !c.IsAborted() {
+			if c.Writer.Status() < http.StatusBadRequest {
 				cache.Delete(c.Request.Context(), fmt.Sprintf(requestPerUser, strconv.FormatUint(uint64(user.ID), 10), "*"))
 			}
 			return
