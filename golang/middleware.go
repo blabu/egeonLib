@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"runtime"
-	"strings"
 	"sync/atomic"
 	"time"
 
@@ -25,7 +24,7 @@ func ContextMiddleware(c *gin.Context) {
 	c.Next()
 }
 
-//AddServerStatsHandler - Выполняет сбор всей необходимой информации о сервисе, и текущем его состоянии
+// AddServerStatsHandler - Выполняет сбор всей необходимой информации о сервисе, и текущем его состоянии
 // не зависит от сервиса и будет переиспользован во всех сервисах приложения
 func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, checkService func() error) {
 	var mem runtime.MemStats
@@ -41,13 +40,13 @@ func AddServerStatsHandler(router gin.IRoutes, url string, info *ServerInfo, che
 		} else {
 			failedCnt = atomic.AddUint64(&stats.FaileReqCnt, 1)
 			switch method {
-			case "GET":
+			case http.MethodGet:
 				atomic.AddUint64(&stats.FaileGetCnt, 1)
-			case "POST":
+			case http.MethodPost:
 				atomic.AddUint64(&stats.FailePostCnt, 1)
-			case "PUT":
+			case http.MethodPut:
 				atomic.AddUint64(&stats.FailePutCnt, 1)
-			case "DELETE":
+			case http.MethodDelete:
 				atomic.AddUint64(&stats.FaileDelCnt, 1)
 			}
 		}
@@ -113,7 +112,7 @@ func GetServerStatusHandler(status ServerStatus, nowConnected *int32, checkServi
 	}
 }
 
-//FormRequestID - формирует строку с идентификатором запроса
+// FormRequestID - формирует строку с идентификатором запроса
 func FormRequestID(user *User) string {
 	if user == nil {
 		return ""
@@ -121,29 +120,29 @@ func FormRequestID(user *User) string {
 	return fmt.Sprintf("%d:%s:%s", time.Now().UnixNano(), user.Email, user.SessionKey)
 }
 
-//CreateSignature - подписывает через secret пользователя userJSON
-func CreateSignature(secret, usrJSON []byte) string {
-	temp := make([]byte, len(usrJSON), len(usrJSON)+len(secret))
-	copy(temp, usrJSON)
+// CreateSignature - подписывает через secret пользователя userJSON
+func CreateSignature(secret, userJSON []byte) string {
+	temp := make([]byte, len(userJSON), len(userJSON)+len(secret))
+	copy(temp, userJSON)
 	temp = append(temp, secret...)
 	signatureHash := sha256.Sum256(temp)
 	return base64.StdEncoding.EncodeToString(signatureHash[:])
 }
 
-//CheckSignature - check received signature with origin
+// CheckSignature - check received signature with origin
 func CheckSignature(signature, userJSON, secret string) bool {
 	temp := []byte(userJSON + secret)
 	signatureHash := sha256.Sum256(temp)
 	origin := base64.StdEncoding.EncodeToString(signatureHash[:])
-	return strings.EqualFold(signature, origin)
+	return signature == origin
 }
 
-//ParseHeader - формирует контекст запроса исходя из заголовков HTTP запроса
-//формирование заголовка выполняется функцией DoRequest
+// ParseHeader - формирует контекст запроса исходя из заголовков HTTP запроса
+// формирование заголовка выполняется функцией DoRequest
 func ParseHeader(r *http.Request) (context.Context, error) {
 	userJSON := r.Header.Get(UserHeaderKey)
 	signStr := r.Header.Get(SignatureHeaderKey)
-	secret := os.Getenv(EegeonSecretKeyEnviron)
+	secret := os.Getenv(EgeonSecretKeyEnviron)
 	allowedRole := r.Header.Get(AllowedRoleHeaderKey)
 	if !CheckSignature(signStr, userJSON, secret) {
 		return r.Context(), EgeonError{Code: NotAuthError, Description: "Signature for user is incorrect"}
@@ -163,7 +162,7 @@ func ParseHeader(r *http.Request) (context.Context, error) {
 	return ctx, nil
 }
 
-//ParseHeaderMiddleware - read standart user header in http request to search them user and requestID parameters and add it to context of request
+// ParseHeaderMiddleware - read standart user header in http request to search them user and requestID parameters and add it to context of request
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах) если используется gin
 func ParseHeaderMiddleware(c *gin.Context) {
 	ctx, err := ParseHeader(c.Request)
@@ -175,7 +174,7 @@ func ParseHeaderMiddleware(c *gin.Context) {
 	}
 }
 
-//ParseHTTPHeaderMiddleware - парсит заголовки запроса в поисках пользователя, проверяет подпись пользователя и requestID.
+// ParseHTTPHeaderMiddleware - парсит заголовки запроса в поисках пользователя, проверяет подпись пользователя и requestID.
 // Парсинг будет переиспользоватся в выше стоящих слоях приложения (сервисах) если используется стандартный http или gorrila.mux
 func ParseHTTPHeaderMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

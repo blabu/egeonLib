@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 
 	retry "github.com/hashicorp/go-retryablehttp"
 )
@@ -33,40 +34,43 @@ func appendDefaultErrorHandler(client *retry.Client) {
 	}
 }
 
-//DoRequest - create request and read answer
-//method can be GET, POST, PUT, DELETE (http method)
+type RequestEditorFn func(ctx context.Context, req *retry.Request) error
+
+// DoRequest - create request and read answer
+// method can be GET, POST, PUT, DELETE (http method)
 // user in context is required
-//reqBody - can be nil
-func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte) ([]byte, error) {
-	if client.ErrorHandler == nil {
-		appendDefaultErrorHandler(client)
-	}
+// reqBody - can be nil
+func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL url.URL, reqBody []byte, reqEditors ...RequestEditorFn) ([]byte, error) {
 	req, err := retry.NewRequest(method, reqURL.String(), reqBody)
 	if err != nil {
 		return nil, err
 	}
-
 	user, _ := ctx.Value(UserKey).(User)
+	user.UsersGroups = nil
 	reqID, _ := ctx.Value(RequestID).(string)
 	if len(reqID) == 0 {
 		reqID = FormRequestID(&user)
 	}
-	sign, _ := ctx.Value(SignKey).(string)
 	allowedRole, _ := ctx.Value(AllowedRoleKey).(string)
 	userJSON, _ := json.Marshal(&user)
+	sign := CreateSignature([]byte(os.Getenv(EgeonSecretKeyEnviron)), userJSON)
 	req.Header.Add(SignatureHeaderKey, sign)
 	req.Header.Add(UserHeaderKey, string(userJSON))
 	req.Header.Add(RequestIDHeaderKey, reqID)
 	req.Header.Add(AllowedRoleHeaderKey, allowedRole)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("content-type", "application/json")
+	for i := range reqEditors {
+		if err := reqEditors[i](ctx, req); err != nil {
+			return nil, err
+		}
+	}
 
+	if client.ErrorHandler == nil {
+		appendDefaultErrorHandler(client)
+	}
 	resp, err := client.Do(req)
 	if err != nil {
-		if resp != nil && resp.Body != nil {
-			resp.Body.Close()
-		}
-		return nil, err
+		return nil, EgeonError{Code: InternalError, Description: "Request failed " + " error " + err.Error()}
 	}
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
