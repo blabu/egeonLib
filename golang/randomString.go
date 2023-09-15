@@ -12,10 +12,6 @@ const RAND_SIZE = 32
 
 var randArray [RAND_SIZE]byte
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 // GenerateRandom - выдает случайную строку
 func GenerateRandom() string {
 	return QuickRandom(32)

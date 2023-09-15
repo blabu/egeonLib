@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -23,7 +23,7 @@ func appendDefaultErrorHandler(client *retry.Client) {
 		if resp.StatusCode > 399 {
 			var egeonErr EgeonError
 			defer resp.Body.Close()
-			if data, err := ioutil.ReadAll(resp.Body); err == nil {
+			if data, err := io.ReadAll(resp.Body); err == nil {
 				if err := json.Unmarshal(data, &egeonErr); err == nil {
 					return resp, egeonErr
 				}
@@ -73,7 +73,7 @@ func DoRequest(ctx context.Context, client *retry.Client, method string, reqURL 
 		return nil, EgeonError{Code: InternalError, Description: "Request failed " + " error " + err.Error()}
 	}
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if resp.StatusCode >= http.StatusMultipleChoices {
 		return nil, errors.New(string(data))
 	}
