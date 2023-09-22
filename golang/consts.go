@@ -5,6 +5,7 @@ const (
 	AllowedRoleHeaderKey  = "AllowedUserRole"
 	RequestIDHeaderKey    = "RequestID"
 	UserHeaderKey         = "User"
+	UserNameHeaderKey     = "X-UserName"
 	SignatureHeaderKey    = "Sign"
 	TokenQueryKey         = "token"
 	EgeonSecretKeyEnviron = "EGEON_SECRET_KEY" // По этому ключу в env операционки лежит секрет, которым подписывают авторизованного пользователя
